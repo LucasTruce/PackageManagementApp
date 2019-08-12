@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordErrorResponse {
+public class PackageErrorResponse {
     private int status;
     private String message;
     private LocalDateTime timestamp;

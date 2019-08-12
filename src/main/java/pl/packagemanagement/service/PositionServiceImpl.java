@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
+import pl.packagemanagement.exception.PositionNotFoundException;
 import pl.packagemanagement.repository.PositionRepository;
 import pl.packagemanagement.repository.UserRepository;
 
@@ -40,8 +41,13 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public void delete(Position position) {
+        List<User> users = userRepository.findByPosition(position);
+        for(User user : users){
+            user.setPosition(null);
+        }
         positionRepository.delete(position);
     }
+
 
     @Override
     public Optional<Position> findById(Long id){

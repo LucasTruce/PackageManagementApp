@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Package;
+import pl.packagemanagement.exception.PackageNotFoundException;
 import pl.packagemanagement.service.PackageService;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class PackageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Package> findById(@PathVariable Long id){
-        return new ResponseEntity<>(packageService.findById(id).orElse(new Package()), HttpStatus.OK);
+        return new ResponseEntity<>(packageService.findById(id).orElseThrow(() -> new PackageNotFoundException("Package not found, id: " + id)), HttpStatus.OK);
     }
 
     @GetMapping("/number/{packageNumber}")

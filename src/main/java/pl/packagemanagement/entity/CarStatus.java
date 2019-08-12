@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "status_samochodu")
-@JsonIgnoreProperties({"car"})
+@JsonIgnoreProperties({"cars"})
 public class CarStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

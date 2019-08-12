@@ -50,8 +50,8 @@ public class User {
 
     //wlasne relacje
     //Stanowiska
-    @ManyToOne
-    @JoinColumn(name = "stanowiska_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "stanowiska_id", nullable = true)
     private Position position;
 
     public User(){ }

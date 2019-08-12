@@ -52,8 +52,9 @@ public class UserController {
         userService.save(user);
     }
 
-    @PutMapping //NALEŻY PODAĆ ID
-    public ResponseEntity<User> updateUser(@RequestBody User user){
+    @PutMapping("/{id}") //NALEŻY PODAĆ ID
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user){
+        User temp = userService.findById(id).orElseThrow(() -> new UserNotFoundException("User not found, id: " + id));
         userService.save(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
