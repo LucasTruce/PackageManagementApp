@@ -1,5 +1,6 @@
 package pl.packagemanagement.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.packagemanagement.entity.Position;
@@ -16,8 +17,10 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     PositionRepository positionRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, PositionRepository positionRepository) {
         this.userRepository = userRepository;
+        this.positionRepository = positionRepository;
     }
 
     @Override
@@ -29,6 +32,12 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
+
+    @Override
+    public User findByLogin(String login) {
+        return userRepository.findByPasswordLogin(login);
+    }
+
 
     @Override
     public User save(User user) {
@@ -48,6 +57,8 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
+
+
 
 
 

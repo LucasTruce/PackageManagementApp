@@ -31,6 +31,7 @@ public class PasswordController {
         return new ResponseEntity<>(passwordService.findPasswordForUser(user), HttpStatus.OK);
     }
 
+
     @PostMapping
     public ResponseEntity<Password> savePassword(@RequestBody Password password){
         return new ResponseEntity<>(passwordService.save(password), HttpStatus.OK);

@@ -14,11 +14,11 @@ import java.util.List;
 public class PasswordServiceImpl implements PasswordService {
 
     PasswordRepository passwordRepository;
-    UserRepository userRepository;
 
+    @Autowired
     public PasswordServiceImpl(PasswordRepository passwordRepository, UserRepository userRepository) {
         this.passwordRepository = passwordRepository;
-        this.userRepository = userRepository;
+
     }
 
     @Override
@@ -35,4 +35,7 @@ public class PasswordServiceImpl implements PasswordService {
     public Password save(Password password) {
         return passwordRepository.save(password);
     }
+
+
+
 }
