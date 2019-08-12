@@ -34,7 +34,7 @@ public class Car {
     @Column(name = "uwagi", length = 45)
     private String comments;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "status_samochodu_id")
     private CarStatus carStatus;
 

@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("users")
 public class UserController {
-    UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService){
@@ -29,18 +29,13 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable Long id){
         return new ResponseEntity<>(
-                userService.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User not found, id: " + id)
-        ),HttpStatus.FOUND);
+                userService.findById(id).orElseThrow( () -> new UserNotFoundException("User not found, id: " + id)), HttpStatus.FOUND);
 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<User> deleteUserById(@PathVariable Long id){
-        User deletedUser = userService.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User not found, id: " + id)
-        );
-
+        User user = userService.findById(id).orElseThrow( () -> new UserNotFoundException("User not found, id: " + id) );
         userService.deleteById(id);
 
         return new ResponseEntity<>(HttpStatus.OK);

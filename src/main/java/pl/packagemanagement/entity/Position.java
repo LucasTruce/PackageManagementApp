@@ -30,10 +30,12 @@ public class Position {
     public Position() {
     }
 
-    public Position(String name, String description) {
+    public Position(@NotNull String name, String description, List<User> users) {
         this.name = name;
         this.description = description;
+        this.users = users;
     }
+
 
     public long getId() {
         return id;

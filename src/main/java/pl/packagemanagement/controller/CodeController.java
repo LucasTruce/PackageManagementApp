@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("codes")
 public class CodeController {
-    CodeService codeService;
+    private final CodeService codeService;
 
     @Autowired
     public CodeController(CodeService codeService) {

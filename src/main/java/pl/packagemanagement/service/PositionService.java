@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PositionService {
-    List<Position> findPositionForUser(Long userId);
+    List<Position> findPositionByUser(User user);
     Position save(Position position);
     void delete(Position position);
     List<Position> findAll();
-    Position findById(Long id);
+    Optional<Position> findById(Long id);
 
 }

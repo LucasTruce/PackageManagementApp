@@ -26,7 +26,7 @@ public class Password {
 
     //nie wiem czy to uzytkownicy nie powinni przetrzymywać hasel!
     //Uzytkownicy
-    @OneToOne(mappedBy = "password")
+    @OneToOne(mappedBy = "password", orphanRemoval = true)
     private User user;
 
     public Password() {

@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("recipients")
 public class RecipientController {
 
-    RecipientService recipientService;
+    private final RecipientService recipientService;
 
     @Autowired
     public RecipientController(RecipientService recipientService) {

@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("content")
 public class ContentController {
 
-    ContentService contentService;
+    private final ContentService contentService;
 
     @Autowired
     public ContentController(ContentService contentService) {

@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("senders")
 public class SenderController {
-    SenderService senderService;
+    private final SenderService senderService;
 
     @Autowired
     public SenderController(SenderService senderService) {

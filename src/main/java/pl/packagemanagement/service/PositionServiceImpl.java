@@ -3,6 +3,7 @@ package pl.packagemanagement.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
 import pl.packagemanagement.repository.PositionRepository;
@@ -28,8 +29,7 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public List<Position> findPositionForUser(Long userId) {
-        User user = userRepository.findById(userId).orElse(new User());
+    public List<Position> findPositionByUser(User user) {
         return positionRepository.findByUsers(user);
     }
 
@@ -44,9 +44,8 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public Position findById(Long id){
-        Position position = positionRepository.findById(id).orElse(new Position());
-        return position;
+    public Optional<Position> findById(Long id){
+        return positionRepository.findById(id);
     }
 
 }

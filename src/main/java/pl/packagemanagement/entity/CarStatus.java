@@ -3,6 +3,7 @@ package pl.packagemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "status_samochodu")
@@ -17,16 +18,16 @@ public class CarStatus {
     @Column(name = "opis", length = 45)
     private String description;
 
-    @OneToOne(mappedBy = "carStatus")
-    private Car car;
+    @OneToMany(mappedBy = "carStatus")
+    private List<Car> cars;
 
     public CarStatus() {
     }
 
-    public CarStatus(String name, String description, Car car) {
+    public CarStatus(String name, String description, List<Car> cars) {
         this.name = name;
         this.description = description;
-        this.car = car;
+        this.cars = cars;
     }
 
     public long getId() {
@@ -53,12 +54,12 @@ public class CarStatus {
         this.description = description;
     }
 
-   public Car getCar() {
-        return car;
+    public List<Car> getCars() {
+        return cars;
     }
 
-    public void setCar(Car car) {
-        this.car = car;
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
     }
 
     @Override
@@ -67,7 +68,7 @@ public class CarStatus {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", car=" + car +
+                ", cars=" + cars +
                 '}';
     }
 }

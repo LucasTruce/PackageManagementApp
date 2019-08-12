@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface PositionRepository extends JpaRepository<Position,Long> {
     List<Position> findByUsers(User user);
+
 }

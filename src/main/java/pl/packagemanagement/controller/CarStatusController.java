@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("carstatus")
 public class CarStatusController {
-    CarStatusService carStatusService;
+    private final CarStatusService carStatusService;
 
     @Autowired
     public CarStatusController(CarStatusService carStatusService) {

@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("warehouses")
 public class WarehouseController {
 
-    WarehouseService warehouseService;
+    private final WarehouseService warehouseService;
 
     @Autowired
     public WarehouseController(WarehouseService warehouseService) {

@@ -22,8 +22,7 @@ public class PasswordServiceImpl implements PasswordService {
     }
 
     @Override
-    public Password findPasswordForUser(Long userId) {
-        User user = userRepository.findById(userId).orElse(new User());
+    public Password findPasswordForUser(User user) {
         return passwordRepository.findByUser(user);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/packstatus")
 public class PackageStatusController {
-    PackageStatusService packStatusService;
+    private final PackageStatusService packStatusService;
 
     @Autowired
     public PackageStatusController(PackageStatusService packStatusService) {

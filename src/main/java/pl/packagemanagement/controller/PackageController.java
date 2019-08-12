@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("packages")
 public class PackageController {
 
-    PackageService packageService;
+    private final PackageService packageService;
 
     @Autowired
     public PackageController(PackageService packageService) {

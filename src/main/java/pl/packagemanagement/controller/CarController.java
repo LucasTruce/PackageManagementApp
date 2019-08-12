@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("cars")
 public class CarController {
-    CarService carService;
+    private final CarService carService;
 
     @Autowired
     public CarController(CarService carService) {
