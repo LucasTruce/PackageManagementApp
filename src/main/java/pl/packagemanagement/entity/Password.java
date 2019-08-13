@@ -14,10 +14,10 @@ public class Password {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_hasla")
     private long id;
-    @Column(name = "email", length = 30)
+    @Column(name = "email", length = 30, unique = true)
     @NotNull
     private String email;
-    @Column(name = "login", length = 16)
+    @Column(name = "login", length = 16, unique = true)
     @NotNull
     private String login;
     @Column(name = "haslo", length = 16)

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Warehouse;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.WarehouseService;
 
 import java.util.List;
@@ -27,7 +28,9 @@ public class WarehouseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Warehouse> findById(@PathVariable Long id){
-        return new ResponseEntity<>(warehouseService.findById(id).orElse(new Warehouse()), HttpStatus.OK);
+        return new ResponseEntity<>(warehouseService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Warehouse not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
     @PostMapping

@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
-import pl.packagemanagement.exception.PositionNotFoundException;
-import pl.packagemanagement.exception.UserNotFoundException;
+import pl.packagemanagement.exception.EntityNotFoundException;
 
 import pl.packagemanagement.service.PositionService;
 import pl.packagemanagement.service.UserService;
@@ -33,13 +32,15 @@ public class PositionController {
     }
     @GetMapping("/users/{userId}/position")
     public ResponseEntity<List<Position>> findPositionForUser(@PathVariable Long userId){
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found, id: " + userId));
+        User user = userService.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found, id: " + userId));
         return new ResponseEntity<>(positionService.findPositionByUser(user), HttpStatus.OK);
     }
 
     @GetMapping("positions/{id}")
     public ResponseEntity<Position> findById(@PathVariable Long id){
-        return new ResponseEntity<>(positionService.findById(id).orElseThrow(() -> new PositionNotFoundException("Position not found, id: " + id)), HttpStatus.OK);
+        return new ResponseEntity<>(positionService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Position not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
 

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Product;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.ProductService;
 
 import java.util.List;
@@ -26,7 +27,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> findById(@PathVariable Long id){
-        return new ResponseEntity<>(productService.findById(id).orElse(new Product()), HttpStatus.OK);
+        return new ResponseEntity<>(productService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Product not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
     @PostMapping

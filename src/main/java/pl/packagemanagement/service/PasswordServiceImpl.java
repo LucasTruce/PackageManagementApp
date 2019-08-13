@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.packagemanagement.entity.Password;
 import pl.packagemanagement.entity.User;
-import pl.packagemanagement.exception.UserNotFoundException;
 import pl.packagemanagement.repository.PasswordRepository;
 import pl.packagemanagement.repository.UserRepository;
-
-import java.util.List;
 
 @Service
 public class PasswordServiceImpl implements PasswordService {

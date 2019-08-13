@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Category;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.CategoryService;
 
 import java.util.List;
@@ -26,7 +27,9 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id){
-        return new ResponseEntity<>(categoryService.findById(id).orElse(new Category()), HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Category not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
     @PostMapping

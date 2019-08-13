@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Car;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.CarService;
 
 import java.util.List;
@@ -26,7 +27,9 @@ public class CarController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Car> findById(@PathVariable Long id){
-        return new ResponseEntity<>(carService.findById(id).orElse(new Car()), HttpStatus.OK);
+        return new ResponseEntity<>(carService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Car not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
     @PostMapping

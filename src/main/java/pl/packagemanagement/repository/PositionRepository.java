@@ -7,9 +7,11 @@ import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PositionRepository extends JpaRepository<Position,Long> {
     List<Position> findByUsers(User user);
+
 
 }

@@ -1,12 +1,8 @@
 package pl.packagemanagement.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
-import pl.packagemanagement.exception.PositionNotFoundException;
 import pl.packagemanagement.repository.PositionRepository;
 import pl.packagemanagement.repository.UserRepository;
 

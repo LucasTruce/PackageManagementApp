@@ -2,10 +2,8 @@ package pl.packagemanagement.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
-import pl.packagemanagement.exception.UserNotFoundException;
 import pl.packagemanagement.repository.PositionRepository;
 import pl.packagemanagement.repository.UserRepository;
 
@@ -34,7 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByLogin(String login) {
+    public Optional<User> findByLogin(String login) {
         return userRepository.findByPasswordLogin(login);
     }
 

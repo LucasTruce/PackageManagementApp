@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Sender;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.SenderService;
 
 import java.util.List;
@@ -26,7 +27,9 @@ public class SenderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Sender> findById(@PathVariable Long id){
-        return new ResponseEntity<>(senderService.findById(id).orElse(new Sender()), HttpStatus.OK);
+        return new ResponseEntity<>(senderService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Sender not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
     @PostMapping

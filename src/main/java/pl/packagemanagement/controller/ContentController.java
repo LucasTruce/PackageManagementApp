@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Content;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.ContentService;
 
 import java.util.List;
@@ -27,7 +28,9 @@ public class ContentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Content> findById(@PathVariable Long id){
-        return new ResponseEntity<>(contentService.findById(id).orElse(new Content()), HttpStatus.OK);
+        return new ResponseEntity<>(contentService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Content not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
     @PostMapping

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Recipient;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.RecipientService;
 
 import java.util.List;
@@ -27,7 +28,9 @@ public class RecipientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Recipient> findById(@PathVariable Long id){
-        return new ResponseEntity<>(recipientService.findById(id).orElse(new Recipient()), HttpStatus.OK);
+        return new ResponseEntity<>(recipientService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Recipient not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
     @PostMapping

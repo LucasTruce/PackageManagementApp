@@ -1,9 +1,10 @@
 package pl.packagemanagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity
@@ -15,22 +16,34 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_uzytkownicy")
     private long id;
+
     @Column(name = "imie", length = 13)
-    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 13, message = "Must be between 3-13 characters")
     private String name;
+
     @Column(name = "nazwisko", length = 49)
-    @NotNull
+    @NotBlank
+    @Size(min = 2, max = 49, message = "Must be between 2-49 characters")
     private String lastName;
+
     @Column(name = "telefon", length = 13)
-    @NotNull
+    @NotBlank
+    @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})") //+48123456789 oraz 123456789
     private String number;
+
     @Column(name = "ulica", length = 72)
-    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 72, message = "Must be between 3-72 characters")
     private String street;
+
     @Column(name = "miasto", length = 39)
-    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 39, message = "Must be between 3-39 characters")
     private String city;
+
     @Column(name = "kod_pocztowy")
+    @Range(min = 00000, max = 99999, message = "post code must have 5 digits")
     private int postCode;
 
     //Paczki -> paczki_uzytkownikow

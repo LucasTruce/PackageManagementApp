@@ -6,12 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Password;
 import pl.packagemanagement.entity.User;
-import pl.packagemanagement.exception.UserNotFoundException;
-import pl.packagemanagement.repository.UserRepository;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.PasswordService;
 import pl.packagemanagement.service.UserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users/{userId}/password")
@@ -27,7 +24,7 @@ public class PasswordController {
 
     @GetMapping
     public ResponseEntity<Password> findPasswordsForUser(@PathVariable Long userId){
-        User user = userService.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found, id: " + userId));
+        User user = userService.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found, id: " + userId));
         return new ResponseEntity<>(passwordService.findPasswordForUser(user), HttpStatus.OK);
     }
 

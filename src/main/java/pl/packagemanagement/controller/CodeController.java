@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.entity.Code;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.CodeService;
 
 import java.util.List;
@@ -26,7 +27,9 @@ public class CodeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Code> findById(@PathVariable Long id){
-        return new ResponseEntity<>(codeService.findById(id).orElse(new Code()), HttpStatus.OK);
+        return new ResponseEntity<>(codeService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Code not found, id: " + id)
+        ), HttpStatus.OK);
     }
 
     @PostMapping

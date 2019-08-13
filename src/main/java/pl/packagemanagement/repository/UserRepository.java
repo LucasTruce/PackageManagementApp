@@ -8,10 +8,11 @@ import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByPosition(Position position);
-    User findByPasswordLogin(String login);
+    Optional<User> findByPasswordLogin(String login);
 
 }

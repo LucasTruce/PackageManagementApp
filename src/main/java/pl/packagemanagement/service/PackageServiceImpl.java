@@ -28,7 +28,7 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
-    public Package findByNumber(String number) {
+    public Optional<Package> findByNumber(String number) {
         return packageRepository.findByPackageNumber(number);
     }
 

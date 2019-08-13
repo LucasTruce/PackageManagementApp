@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Data
+@Data // @Getter, @Setter, @EqualsAndHashCode, @RequiredArgsConstructor oraz @ToString
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class PositionErrorResponse {
+@AllArgsConstructor @NoArgsConstructor
+public class EntityErrorResponse {
     private int status;
     private String message;
     private LocalDateTime timestamp;
