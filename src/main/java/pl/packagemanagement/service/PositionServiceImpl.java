@@ -51,17 +51,6 @@ public class PositionServiceImpl implements PositionService {
         return positionRepository.findById(id);
     }
 
-    @Override
-    public Position update(Position oldPosition, Position position) {
-        if(position.getUsers() != null)
-            oldPosition.setUsers(position.getUsers());
-        if(position.getDescription() != null)
-            oldPosition.setDescription(position.getDescription());
-        if(position.getName() != null)
-            oldPosition.setName(position.getName());
-
-        return positionRepository.save(oldPosition);
-    }
 
 
 }

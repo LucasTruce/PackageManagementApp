@@ -60,7 +60,7 @@ public class PositionController {
     public ResponseEntity<Position> updatePosition(@PathVariable Long id, @Valid @RequestBody Position position){
         Position oldPosition = positionService.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found, id: " + id));
 
-        return new ResponseEntity<>(positionService.update(oldPosition,position), HttpStatus.OK);
+        return new ResponseEntity<>(positionService.save(position), HttpStatus.OK);
     }
 
 
