@@ -3,6 +3,7 @@ package pl.packagemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -17,16 +18,27 @@ public class Package {
     private long id;
 
     @Column(name = "numer_paczki", length = 14)
+    @NotBlank
     private String packageNumber;
-    @Column(name = "data_nadania") //columnDefinition mozna tez wpisac np. NVARCHAR(500) NOT NULL itp..//??
+
+    @Column(name = "data_nadania")  //columnDefinition mozna tez wpisac np. NVARCHAR(500) NOT NULL itp..//??
+    @NotBlank
     private LocalDateTime date;
+
     @Column(name = "wysokosc")
+    @Min(1) @Max(1000)
     private int height;
+
     @Column(name = "dlugosc")
+    @Min(1) @Max(1000)
     private int length;
+
     @Column(name = "szerokosc")
+    @Min(1) @Max(1000)
     private int width;
+
     @Column(name = "uwagi", length = 45)
+    @NotBlank
     private String comments;
 
     //1:1

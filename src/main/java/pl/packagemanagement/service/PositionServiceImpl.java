@@ -35,6 +35,7 @@ public class PositionServiceImpl implements PositionService {
         return positionRepository.save(position);
     }
 
+
     @Override
     public void delete(Position position) {
         List<User> users = userRepository.findByPosition(position);
@@ -49,5 +50,18 @@ public class PositionServiceImpl implements PositionService {
     public Optional<Position> findById(Long id){
         return positionRepository.findById(id);
     }
+
+    @Override
+    public Position update(Position oldPosition, Position position) {
+        if(position.getUsers() != null)
+            oldPosition.setUsers(position.getUsers());
+        if(position.getDescription() != null)
+            oldPosition.setDescription(position.getDescription());
+        if(position.getName() != null)
+            oldPosition.setName(position.getName());
+
+        return positionRepository.save(oldPosition);
+    }
+
 
 }

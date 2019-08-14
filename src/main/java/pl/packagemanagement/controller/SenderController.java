@@ -8,6 +8,7 @@ import pl.packagemanagement.entity.Sender;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.SenderService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,7 +34,7 @@ public class SenderController {
     }
 
     @PostMapping
-    public  void save(@RequestBody Sender sender){
+    public  void save(@Valid @RequestBody Sender sender){
         senderService.save(sender);
     }
 

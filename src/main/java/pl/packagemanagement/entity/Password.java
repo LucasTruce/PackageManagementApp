@@ -3,7 +3,10 @@ package pl.packagemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "hasla")
@@ -14,14 +17,19 @@ public class Password {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_hasla")
     private long id;
+
     @Column(name = "email", length = 30, unique = true)
-    @NotNull
+    @NotBlank
+    @Email
     private String email;
+
     @Column(name = "login", length = 16, unique = true)
-    @NotNull
+    @NotBlank
+    @Size(min = 3, max = 16, message = "Must be between 3-16 characters")
     private String login;
+
     @Column(name = "haslo", length = 16)
-    @NotNull
+    @NotBlank
     private String password;
 
     //nie wiem czy to uzytkownicy nie powinni przetrzymywać hasel!

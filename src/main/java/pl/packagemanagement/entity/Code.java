@@ -3,6 +3,7 @@ package pl.packagemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "kody")
@@ -14,6 +15,7 @@ public class Code {
     private long id;
 
     @Column(name = "sciezka_do_pliku", length = 45)
+    @NotBlank
     private String filePath;
 
     @OneToOne(mappedBy = "code")

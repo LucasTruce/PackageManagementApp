@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
 import pl.packagemanagement.exception.EntityNotFoundException;
+import pl.packagemanagement.service.PositionService;
 import pl.packagemanagement.service.UserService;
 
 import javax.validation.Valid;
@@ -15,10 +17,12 @@ import java.util.List;
 @RequestMapping("users")
 public class UserController {
     private final UserService userService;
+    private final PositionService positionService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, PositionService positionService) {
         this.userService = userService;
+        this.positionService = positionService;
     }
 
     @GetMapping
@@ -56,15 +60,20 @@ public class UserController {
     }
 
     @PostMapping
-    public void saveUser(@RequestBody User user){
+    public void saveUser(@Valid @RequestBody User user){
         userService.save(user);
     }
 
     @PutMapping("/{id}") //NALEŻY PODAĆ ID
     public ResponseEntity<User> updateUser(@PathVariable Long id,  @Valid @RequestBody User user){
-        User temp = userService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("User not found, id: " + id));
-        userService.save(user);
+        User tempUser = userService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User not found, id: " + id)
+        );
+        if(user.getPosition() == null)
+            throw(new EntityNotFoundException("Position not found, put right position"));
+
+        userService.update(user);
+
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

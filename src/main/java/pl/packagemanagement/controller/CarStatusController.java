@@ -9,6 +9,7 @@ import pl.packagemanagement.entity.CarStatus;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.CarStatusService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class CarStatusController {
     }
 
     @PostMapping
-    public void save(@RequestBody CarStatus carStatus){
+    public void save(@Valid @RequestBody CarStatus carStatus){
         carStatusService.save(carStatus);
     }
 

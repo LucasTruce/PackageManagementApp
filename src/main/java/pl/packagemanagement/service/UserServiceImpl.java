@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    //zrobic funkcje na update uzytkownika z pozycjami
     @Override
     public User save(User user) {
         return userRepository.save(user);
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
     public void delete(User user) {
         List<Position> positions = positionRepository.findByUsers(user);
         for(Position temp : positions){
-            temp.setUsers(null);
+            temp.getUsers().remove(user);
         }
         userRepository.delete(user);
     }
@@ -56,8 +57,13 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-
-
+    @Override
+    public User update(User user){
+        Optional<Position> position = positionRepository.findById(user.getPosition().getId());
+        List<User> positionUsers = position.get().getUsers();
+        positionUsers.add(user);
+        return userRepository.save(user);
+    }
 
 
 }

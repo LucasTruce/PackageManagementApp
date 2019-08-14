@@ -29,7 +29,7 @@ public class User {
 
     @Column(name = "telefon", length = 13)
     @NotBlank
-    @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})") //+48123456789 oraz 123456789
+    @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})", message = "only 9digits number and with +48") //+48123456789 oraz 123456789
     private String number;
 
     @Column(name = "ulica", length = 72)

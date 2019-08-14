@@ -3,6 +3,7 @@ package pl.packagemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,8 @@ public class Content {
     @Column(name = "id_zawartosc")
     private long id;
 
-    @Column(name = "czas_kompletacji") //columnDefinition mozna tez wpisac np. NVARCHAR(500) NOT NULL itp..
+    @Column(name = "czas_kompletacji")
+    @NotBlank
     private LocalDateTime date;
 
     @Column(name = "opis_zawartosci", length = 255)

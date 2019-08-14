@@ -8,6 +8,7 @@ import pl.packagemanagement.entity.Recipient;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.RecipientService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class RecipientController {
     }
 
     @PostMapping
-    public void save(@RequestBody Recipient recipient){
+    public void save(@Valid @RequestBody Recipient recipient){
         recipientService.save(recipient);
     }
 

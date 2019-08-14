@@ -8,6 +8,7 @@ import pl.packagemanagement.entity.Code;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.CodeService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,7 +34,7 @@ public class CodeController {
     }
 
     @PostMapping
-    public void save(@RequestBody Code code){
+    public void save(@Valid @RequestBody Code code){
         codeService.save(code);
     }
 

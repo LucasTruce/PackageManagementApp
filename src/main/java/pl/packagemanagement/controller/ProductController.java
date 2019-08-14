@@ -8,6 +8,7 @@ import pl.packagemanagement.entity.Product;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.ProductService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,7 +34,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public void save(@RequestBody Product product){
+    public void save(@Valid @RequestBody Product product){
         productService.save(product);
     }
 

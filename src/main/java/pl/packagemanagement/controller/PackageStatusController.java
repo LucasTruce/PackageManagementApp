@@ -9,6 +9,7 @@ import pl.packagemanagement.entity.PackageStatus;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.PackageStatusService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class PackageStatusController {
     }
 
     @PostMapping
-    public void save(@RequestBody PackageStatus packageStatus){
+    public void save(@Valid @RequestBody PackageStatus packageStatus){
         packStatusService.save(packageStatus);
     }
 

@@ -8,6 +8,7 @@ import pl.packagemanagement.entity.Category;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.CategoryService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,7 +34,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public void save(@RequestBody Category category){
+    public void save(@Valid  @RequestBody Category category){
         categoryService.save(category);
     }
 

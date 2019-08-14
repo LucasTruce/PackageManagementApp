@@ -1,6 +1,8 @@
 package pl.packagemanagement.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -12,8 +14,12 @@ public class Category {
     private long id;
 
     @Column(name = "nazwa", length = 45)
+    @NotBlank
+    @Size(min = 2, message = "Must have between 2-45 characters")
     private String name;
+
     @Column(name = "opis", length = 45)
+    @NotBlank
     private String description;
 
     @OneToMany(mappedBy = "category")

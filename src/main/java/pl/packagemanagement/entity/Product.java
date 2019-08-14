@@ -3,6 +3,7 @@ package pl.packagemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "towary")
@@ -14,10 +15,14 @@ public class Product {
     private long id;
 
     @Column(name = "nazwa", length = 45)
+    @NotBlank
     private String name;
+
     @Column(name = "waga")
     private float waga;
+
     @Column(name = "uwagi", length = 45)
+    @NotBlank
     private String comments;
 
     @OneToOne

@@ -1,5 +1,6 @@
 package pl.packagemanagement.service;
 
+import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface UserService {
     User save(User user);
     void delete(User user);
     void deleteById(Long id);
+    User update(User user);
 }

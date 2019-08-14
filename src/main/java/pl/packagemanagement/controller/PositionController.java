@@ -12,6 +12,7 @@ import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.PositionService;
 import pl.packagemanagement.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -51,13 +52,16 @@ public class PositionController {
     }
 
     @PostMapping("positions")
-    public ResponseEntity<Position> savePosition(@RequestBody Position position){
+    public ResponseEntity<Position> savePosition(@Valid @RequestBody Position position){
         return new ResponseEntity<>(positionService.save(position), HttpStatus.OK);
     }
 
-    @PutMapping("positions")
-    public ResponseEntity<Position> updatePosition(@RequestBody Position position){
-        return new ResponseEntity<>(positionService.save(position), HttpStatus.OK);
+    @PutMapping("positions/{id}")
+    public ResponseEntity<Position> updatePosition(@PathVariable Long id, @Valid @RequestBody Position position){
+        Position oldPosition = positionService.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found, id: " + id));
+
+        return new ResponseEntity<>(positionService.update(oldPosition,position), HttpStatus.OK);
     }
+
 
 }

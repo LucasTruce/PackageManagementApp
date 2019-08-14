@@ -10,6 +10,8 @@ import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.PasswordService;
 import pl.packagemanagement.service.UserService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users/{userId}/password")
 public class PasswordController {
@@ -30,7 +32,7 @@ public class PasswordController {
 
 
     @PostMapping
-    public ResponseEntity<Password> savePassword(@RequestBody Password password){
+    public ResponseEntity<Password> savePassword(@Valid @RequestBody Password password){
         return new ResponseEntity<>(passwordService.save(password), HttpStatus.OK);
     }
 

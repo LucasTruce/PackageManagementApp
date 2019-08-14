@@ -3,6 +3,7 @@ package pl.packagemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -13,25 +14,42 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_samochody")
     private long id;
+
     @Column(name = "marka", length = 15)
+    @NotBlank
     private String brand;
+
     @Column(name = "model", length = 18)
+    @NotBlank
     private String model;
+
     @Column(name = "typ_silnika", length = 10)
+    @NotBlank
     private String engineType;
+
     @Column(name = "moc")
     private int power;
+
     @Column(name = "pojemnosc")
     private double capacity;
+
     @Column(name = "kolor", length = 30)
+    @NotBlank
     private String color;
+
     @Column(name = "rodzaj", length = 45)
+    @NotBlank
     private String type;
+
     @Column(name = "numer_rejestracyjny", length = 7)
+    @NotBlank
     private String licensePlate;
+
     @Column(name = "ladownosc")
     private float load;
+
     @Column(name = "uwagi", length = 45)
+    @NotBlank
     private String comments;
 
     @ManyToOne

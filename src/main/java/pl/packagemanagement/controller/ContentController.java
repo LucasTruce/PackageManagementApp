@@ -8,6 +8,7 @@ import pl.packagemanagement.entity.Content;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.ContentService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class ContentController {
     }
 
     @PostMapping
-    public void save(@RequestBody Content content){
+    public void save(@Valid  @RequestBody Content content){
         contentService.save(content);
     }
 

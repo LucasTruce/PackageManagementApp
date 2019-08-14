@@ -8,6 +8,7 @@ import pl.packagemanagement.entity.Warehouse;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.service.WarehouseService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class WarehouseController {
     }
 
     @PostMapping
-    public void save(@RequestBody Warehouse warehouse){
+    public void save(@Valid @RequestBody Warehouse warehouse){
         warehouseService.save(warehouse);
     }
 

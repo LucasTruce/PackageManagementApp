@@ -3,6 +3,8 @@ package pl.packagemanagement.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -13,9 +15,14 @@ public class CarStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_status")
     private long id;
+
     @Column(name = "nazwa", length = 30)
+    @NotBlank
+    @Size(min = 3, message = "Must be between 3-30 characters")
     private String name;
+
     @Column(name = "opis", length = 45)
+    @NotBlank
     private String description;
 
     @OneToMany(mappedBy = "carStatus")

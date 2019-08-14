@@ -1,8 +1,12 @@
 package pl.packagemanagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -15,14 +19,26 @@ public class Warehouse {
     private long id;
 
     @Column(name = "telefon", length = 13)
+    @NotBlank
+    @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})", message = "only 9digits number and with +48") //+48123456789 oraz 123456789
     private String number;
+
     @Column(name = "ulica", length = 72)
+    @NotBlank
+    @Size(min = 3, max = 72, message = "Must be between 3-72 characters")
     private String street;
+
     @Column(name = "kod_pocztowy")
+    @Range(min = 00000, max = 99999, message = "post code must have 5 digits")
     private int postCode;
-    @Column(name = "miasto", length = 30)
+
+    @Column(name = "miasto", length = 39)
+    @NotBlank
+    @Size(min = 3, max = 39, message = "Must be between 3-39 characters")
     private String city;
+
     @Column(name = "opis_magazynu", length = 45)
+    @NotBlank
     private String description;
 
     @ManyToMany(mappedBy = "warehouses")
