@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("users")
+@CrossOrigin
 public class UserController {
     private final UserService userService;
     private final PositionService positionService;
@@ -25,8 +26,10 @@ public class UserController {
         this.positionService = positionService;
     }
 
+    @CrossOrigin("http://localhost:4200")
     @GetMapping
     public ResponseEntity<List<User>> findAllUsers(){
+
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 

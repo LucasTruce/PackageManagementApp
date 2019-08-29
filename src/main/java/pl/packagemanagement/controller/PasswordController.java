@@ -14,6 +14,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users/{userId}/password")
+@CrossOrigin
 public class PasswordController {
     private final PasswordService passwordService;
     private final UserService userService;
@@ -34,6 +35,14 @@ public class PasswordController {
     @PostMapping
     public ResponseEntity<Password> savePassword(@Valid @RequestBody Password password){
         return new ResponseEntity<>(passwordService.save(password), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<Password> updatePassword(@Valid @RequestBody Password password){
+        Password tempPass = passwordService.findById(password.getId()).orElseThrow(
+                () -> new EntityNotFoundException("Password not found")
+        );
+        return new ResponseEntity<>(passwordService.update(password), HttpStatus.OK);
     }
 
     @DeleteMapping

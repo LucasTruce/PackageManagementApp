@@ -1,6 +1,7 @@
 package pl.packagemanagement.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.packagemanagement.entity.Position;
 import pl.packagemanagement.entity.User;
@@ -12,8 +13,10 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    UserRepository userRepository;
-    PositionRepository positionRepository;
+    private final UserRepository userRepository;
+    private final PositionRepository positionRepository;
+
+
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PositionRepository positionRepository) {

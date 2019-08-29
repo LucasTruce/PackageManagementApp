@@ -10,5 +10,7 @@ public interface PasswordService {
     Password findPasswordForUser(User user);
     void delete(Password password);
     Password save(Password password);
+    Password update(Password password);
+    Optional<Password> findById(Long id);
 
 }

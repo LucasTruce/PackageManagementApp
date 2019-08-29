@@ -28,7 +28,7 @@ public class Password {
     @Size(min = 3, max = 16, message = "Must be between 3-16 characters")
     private String login;
 
-    @Column(name = "haslo", length = 16)
+    @Column(name = "haslo")
     @NotBlank
     private String password;
 

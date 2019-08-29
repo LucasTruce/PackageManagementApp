@@ -7,8 +7,10 @@ import pl.packagemanagement.entity.Password;
 import pl.packagemanagement.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PasswordRepository extends JpaRepository<Password,Long> {
     Password findByUser(User user);
+    Optional<Password> findByLogin(String login);
 }
