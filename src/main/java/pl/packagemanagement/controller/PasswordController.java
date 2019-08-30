@@ -13,7 +13,7 @@ import pl.packagemanagement.service.UserService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/users/{userId}/password")
+@RequestMapping("password")
 @CrossOrigin
 public class PasswordController {
     private final PasswordService passwordService;
@@ -25,7 +25,7 @@ public class PasswordController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/users/{userId}/password")
     public ResponseEntity<Password> findPasswordsForUser(@PathVariable Long userId){
         User user = userService.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found, id: " + userId));
         return new ResponseEntity<>(passwordService.findPasswordForUser(user), HttpStatus.OK);

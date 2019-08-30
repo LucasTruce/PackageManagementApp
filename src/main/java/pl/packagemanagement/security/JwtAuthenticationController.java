@@ -42,7 +42,6 @@ public class JwtAuthenticationController {
     @RequestMapping("/register")
     @PostMapping
     public ResponseEntity<?> savePassword(@RequestBody @Valid Password password) throws Exception {
-
         return ResponseEntity.ok(passwordService.save(password));
 
     }
