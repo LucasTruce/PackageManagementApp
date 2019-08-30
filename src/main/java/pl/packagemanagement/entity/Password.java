@@ -19,17 +19,17 @@ public class Password {
     private long id;
 
     @Column(name = "email", length = 30, unique = true)
-    @NotBlank(message = "Imię nie może być puste")
-    @Email(message = "Podaj poprawny email")
+    @NotBlank(message = "Email nie może byc pusty")
+    @Email(message = "Podaj poprawny adres email")
     private String email;
 
     @Column(name = "login", length = 16, unique = true)
-    @NotBlank(message = "Nie może być puste")
-    @Size(min = 3, max = 16, message = "Must be between 3-16 characters")
+    @NotBlank(message = "Login nie może być pusty")
+    @Size(min = 3, max = 16, message = "Login musi zawierać od 3 do 16 znaków")
     private String login;
 
     @Column(name = "haslo")
-    @NotBlank(message = "Nie może być puste")
+    @NotBlank(message = "Podaj poprawne hasło!")
     private String password;
 
     //nie wiem czy to uzytkownicy nie powinni przetrzymywać hasel!
