@@ -16,15 +16,15 @@ public class Car {
     private long id;
 
     @Column(name = "marka", length = 15)
-    @NotBlank
+    @NotBlank(message = "Marka nie może być pusta!")
     private String brand;
 
     @Column(name = "model", length = 18)
-    @NotBlank
+    @NotBlank(message = "Model nie może być pusty!")
     private String model;
 
     @Column(name = "typ_silnika", length = 10)
-    @NotBlank
+    @NotBlank(message = "Typ silnika nie może być pusty!")
     private String engineType;
 
     @Column(name = "moc")
@@ -34,22 +34,22 @@ public class Car {
     private double capacity;
 
     @Column(name = "kolor", length = 30)
-    @NotBlank
+    @NotBlank(message = "Kolor nie może być pusty!")
     private String color;
 
     @Column(name = "rodzaj", length = 45)
-    @NotBlank
+    @NotBlank(message = "Rodzaj nie może być pusty!")
     private String type;
 
     @Column(name = "numer_rejestracyjny", length = 7)
-    @NotBlank
+    @NotBlank(message = "Numer rejestracyjny nie możę być pusty!")
     private String licensePlate;
 
     @Column(name = "ladownosc")
     private float load;
 
     @Column(name = "uwagi", length = 45)
-    @NotBlank
+    @NotBlank(message = "Musisz podać komentarz!")
     private String comments;
 
     @ManyToOne

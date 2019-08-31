@@ -18,32 +18,32 @@ public class User {
     private long id;
 
     @Column(name = "imie", length = 13)
-    @NotBlank
-    @Size(min = 3, max = 13, message = "Must be between 3-13 characters")
+    @NotBlank(message = "Imię nie może być puste!")
+    @Size(min = 3, max = 13, message = "Imię musi zawierać od 3 do 13 liter!")
     private String name;
 
     @Column(name = "nazwisko", length = 49)
-    @NotBlank
-    @Size(min = 2, max = 49, message = "Must be between 2-49 characters")
+    @NotBlank(message = "Nazwisko nie może być puste!")
+    @Size(min = 2, max = 49, message = "Nazwisko musi zawierać od 2 do 49 liter!")
     private String lastName;
 
     @Column(name = "telefon", length = 13)
-    @NotBlank
-    @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})", message = "only 9digits number and with +48") //+48123456789 oraz 123456789
+    @NotBlank(message = "Numer telefonu nie może być pusty!")
+    @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})", message = "Podaj numer 9 cyfrowy lub z formatem +48") //+48123456789 oraz 123456789
     private String number;
 
     @Column(name = "ulica", length = 72)
-    @NotBlank
-    @Size(min = 3, max = 72, message = "Must be between 3-72 characters")
+    @NotBlank(message = "Ulica nie może być pusta!")
+    @Size(min = 3, max = 72, message = "Ulica musi zawierać od 3 do 72 liter!")
     private String street;
 
     @Column(name = "miasto", length = 39)
-    @NotBlank
-    @Size(min = 3, max = 39, message = "Must be between 3-39 characters")
+    @NotBlank(message = "Miasto nie może być puste!")
+    @Size(min = 3, max = 39, message = "Miasto musi zawierac od 3 do 39 liter!")
     private String city;
 
     @Column(name = "kod_pocztowy")
-    @Range(min = 00000, max = 99999, message = "post code must have 5 digits")
+    @Range(min = 0, max = 99999, message = "Kod pocztowy musi zawierac 5 cyfr!")
     private int postCode;
 
     //Paczki -> paczki_uzytkownikow
@@ -69,7 +69,7 @@ public class User {
 
     public User(){ }
 
-    public User(String name, String lastName, String number, String street, String city, int postCode, Position position){
+    public User(String name, String lastName, String number, String street, String city, int postCode, Position position, Password password){
         this.name = name;
         this.lastName = lastName;
         this.number = number;
@@ -77,6 +77,7 @@ public class User {
         this.city = city;
         this.postCode = postCode;
         this.position = position;
+        this.password = password;
     }
 
     public long getId() {

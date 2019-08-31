@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.packagemanagement.entity.Password;
 import pl.packagemanagement.entity.User;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.repository.PasswordRepository;
 import pl.packagemanagement.repository.UserRepository;
 
@@ -18,13 +19,15 @@ import java.util.Optional;
 public class PasswordServiceImpl implements PasswordService, UserDetailsService {
 
     private final PasswordRepository passwordRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
     @Autowired
-    public PasswordServiceImpl(PasswordRepository passwordRepository) {
+    public PasswordServiceImpl(PasswordRepository passwordRepository,UserRepository userRepository) {
         this.passwordRepository = passwordRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -60,10 +63,22 @@ public class PasswordServiceImpl implements PasswordService, UserDetailsService 
         return passwordRepository.findById(id);
     }
 
+    @Override
+    public Optional<Password> findByEmail(String email) {
+        return passwordRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<Password> findByLogin(String login) {
+        return passwordRepository.findByLogin(login);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         Optional<Password> pass = passwordRepository.findByLogin(login);
+        if(pass.isEmpty())
+            pass = passwordRepository.findByEmail(login);
         return new org.springframework.security.core.userdetails.User(pass.get().getLogin(), pass.get().getPassword(),
                 new ArrayList<>());
     }

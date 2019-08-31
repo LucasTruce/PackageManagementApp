@@ -39,6 +39,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByPasswordLogin(login);
     }
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByPasswordEmail(email);
+    }
+
 
     //zrobic funkcje na update uzytkownika z pozycjami
     @Override

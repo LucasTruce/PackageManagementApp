@@ -18,11 +18,11 @@ public class Position {
     private long id;
 
     @Column(name = "nazwa", length = 45)
-    @NotBlank
+    @NotBlank(message = "Nazwa nie może być pusta!")
     private String name;
 
     @Column(name = "opis", length = 45)
-    @NotBlank
+    @NotBlank(message = "Opis nie może być pusty!")
     private String description;
 
     //kto inny jest wlascicielem (PODAJEMY ZMIENNA NIE NAZWE KOLUMNY)

@@ -12,5 +12,7 @@ public interface PasswordService {
     Password save(Password password);
     Password update(Password password);
     Optional<Password> findById(Long id);
+    Optional<Password> findByEmail(String email);
+    Optional<Password> findByLogin(String login);
 
 }
