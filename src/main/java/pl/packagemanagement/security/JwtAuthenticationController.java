@@ -8,9 +8,8 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import pl.packagemanagement.entity.Password;
-import pl.packagemanagement.service.PasswordService;
-import pl.packagemanagement.service.PasswordServiceImpl;
+import pl.packagemanagement.model.user.User;
+import pl.packagemanagement.model.user.UserServiceImpl;
 
 import javax.validation.Valid;
 
@@ -25,7 +24,7 @@ public class JwtAuthenticationController {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private PasswordServiceImpl passwordService;
+    private UserServiceImpl passwordService;
 
     @RequestMapping("/authenticate")
     @PostMapping
@@ -41,8 +40,8 @@ public class JwtAuthenticationController {
 
     @RequestMapping("/register")
     @PostMapping
-    public ResponseEntity<?> savePassword(@RequestBody @Valid Password password) throws Exception {
-        return ResponseEntity.ok(passwordService.save(password));
+    public ResponseEntity<?> savePassword(@RequestBody @Valid User user) throws Exception {
+        return ResponseEntity.ok(passwordService.save(user));
 
     }
 
