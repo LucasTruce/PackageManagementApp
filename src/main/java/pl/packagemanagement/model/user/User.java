@@ -16,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "uzytkownicy")
-@JsonIgnoreProperties({"user", "packages"})
+@JsonIgnoreProperties({"user", "packages" })
 @Data
 @NoArgsConstructor
 public class User {

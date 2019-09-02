@@ -49,10 +49,10 @@ public class UserDetails {
     @Size(min = 3, max = 39, message = "Miasto musi zawierac od 3 do 39 liter!")
     private String city;
 
-    @Column(name = "kod_pocztowy")
-    @Range(min = 0, max = 99999, message = "Kod pocztowy musi zawierac 5 cyfr!")
-    private int postCode;
-
+    @Column(name = "kod_pocztowy", length = 6)
+    @Size(min = 6, message = "Podaj poprawny format kodu! (xx-zz)")
+    @Pattern(regexp = "([\\d]{2})-([\\d]{3})", message = "Podaj poprawny format kodu! (xx-zz)")
+    private String postCode;
 
     //kto inny jest wlascicielem relacji
     //Uzytkownik
