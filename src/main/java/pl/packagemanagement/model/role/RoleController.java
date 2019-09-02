@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.role;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/roles")
+@RequiredArgsConstructor
 @CrossOrigin
 public class RoleController {
 
     private final RoleService roleService;
-
-    @Autowired
-    public RoleController(RoleService roleService) {
-        this.roleService = roleService;
-    }
-
 
 }

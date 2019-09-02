@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.sender;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("senders")
+@RequiredArgsConstructor
 public class SenderController {
     private final SenderService senderService;
-
-    @Autowired
-    public SenderController(SenderService senderService) {
-        this.senderService = senderService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Sender>> findAll(){

@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.code;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("codes")
+@RequiredArgsConstructor
 public class CodeController {
     private final CodeService codeService;
-
-    @Autowired
-    public CodeController(CodeService codeService) {
-        this.codeService = codeService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Code>> findAll(){

@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.carstatus;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +15,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("carstatus")
+@AllArgsConstructor
 public class CarStatusController {
     private final CarStatusService carStatusService;
-
-    @Autowired
-    public CarStatusController(CarStatusService carStatusService) {
-        this.carStatusService = carStatusService;
-    }
 
     @GetMapping
     public ResponseEntity<List<CarStatus>> findAll(){

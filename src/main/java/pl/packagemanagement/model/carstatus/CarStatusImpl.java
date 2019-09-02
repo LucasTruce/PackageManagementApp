@@ -1,18 +1,17 @@
 package pl.packagemanagement.model.carstatus;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CarStatusImpl implements CarStatusService {
 
-    CarStatusRepository carStatusRepo;
-
-    public CarStatusImpl(CarStatusRepository carStatusRepo) {
-        this.carStatusRepo = carStatusRepo;
-    }
+    private final CarStatusRepository carStatusRepo;
 
     @Override
     public List<CarStatus> findAll() {

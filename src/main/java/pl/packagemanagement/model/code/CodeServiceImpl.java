@@ -1,17 +1,15 @@
 package pl.packagemanagement.model.code;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CodeServiceImpl implements CodeService {
-    CodeRepository codeRepository;
-
-    public CodeServiceImpl(CodeRepository codeRepository) {
-        this.codeRepository = codeRepository;
-    }
+    private final CodeRepository codeRepository;
 
     @Override
     public List<Code> findAll() {

@@ -1,5 +1,7 @@
 package pl.packagemanagement.model.category;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +15,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("categories")
+@RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
-
-    @Autowired
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Category>> findAll(){

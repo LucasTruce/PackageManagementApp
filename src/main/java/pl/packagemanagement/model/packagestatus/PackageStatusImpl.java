@@ -1,17 +1,15 @@
 package pl.packagemanagement.model.packagestatus;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PackageStatusImpl implements PackageStatusService {
-    PackageStatusRepository packageStatusRepository;
-
-    public PackageStatusImpl(PackageStatusRepository packageStatusRepository) {
-        this.packageStatusRepository = packageStatusRepository;
-    }
+    private final PackageStatusRepository packageStatusRepository;
 
     @Override
     public List<PackageStatus> findAll() {

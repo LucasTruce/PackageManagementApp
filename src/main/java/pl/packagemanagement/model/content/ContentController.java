@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.content;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("content")
+@RequiredArgsConstructor
 public class ContentController {
 
     private final ContentService contentService;
-
-    @Autowired
-    public ContentController(ContentService contentService) {
-        this.contentService = contentService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Content>> findAll(){

@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.warehouse;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("warehouses")
+@RequiredArgsConstructor
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
-
-    @Autowired
-    public WarehouseController(WarehouseService warehouseService) {
-        this.warehouseService = warehouseService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Warehouse>> findAll(){

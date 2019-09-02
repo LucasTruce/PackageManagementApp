@@ -1,25 +1,20 @@
 package pl.packagemanagement.model.car;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.packagemanagement.model.car.Car;
 import pl.packagemanagement.exception.EntityNotFoundException;
-import pl.packagemanagement.model.car.CarService;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("cars")
+@RequiredArgsConstructor
 public class CarController {
-    private final CarService carService;
 
-    @Autowired
-    public CarController(CarService carService) {
-        this.carService = carService;
-    }
+    private final CarService carService;
 
     @GetMapping
     public ResponseEntity<List<Car>> findAll(){

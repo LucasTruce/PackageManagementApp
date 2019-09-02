@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.pack;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("packages")
+@RequiredArgsConstructor
 public class PackageController {
 
     private final PackageService packageService;
-
-    @Autowired
-    public PackageController(PackageService packageService) {
-        this.packageService = packageService;
-    }
 
     @GetMapping
     public ResponseEntity<List<Package>> findAllPackages() {

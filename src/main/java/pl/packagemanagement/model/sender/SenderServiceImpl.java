@@ -1,17 +1,15 @@
 package pl.packagemanagement.model.sender;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class SenderServiceImpl implements SenderService {
-    SenderRepository senderRepository;
-
-    public SenderServiceImpl(SenderRepository senderRepository) {
-        this.senderRepository = senderRepository;
-    }
+    private final SenderRepository senderRepository;
 
     @Override
     public List<Sender> findAll() {

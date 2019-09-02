@@ -1,6 +1,8 @@
 package pl.packagemanagement.model.content;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.packagemanagement.model.pack.Package;
 import pl.packagemanagement.model.product.Product;
 
@@ -12,6 +14,8 @@ import java.util.List;
 @Entity
 @Table(name = "zawartosc")
 @JsonIgnoreProperties({"pack", "products"})
+@Data
+@NoArgsConstructor
 public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,62 +35,4 @@ public class Content {
     @OneToOne(mappedBy = "content")
     private Package pack;
 
-    public Content() {
-    }
-
-    public Content(LocalDateTime date, String content) {
-        this.date = date;
-        this.content = content;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
-    public Package getPack() {
-        return pack;
-    }
-
-    public void setPack(Package pack) {
-        this.pack = pack;
-    }
-
-    @Override
-    public String toString() {
-        return "Zawartosc{" +
-                "id=" + id +
-                ", date=" + date +
-                ", content='" + content + '\'' +
-                ", products=" + products +
-                ", pack=" + pack +
-                '}';
-    }
 }

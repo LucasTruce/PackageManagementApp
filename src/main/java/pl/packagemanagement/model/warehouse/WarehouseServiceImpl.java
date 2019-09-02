@@ -1,18 +1,15 @@
 package pl.packagemanagement.model.warehouse;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class WarehouseServiceImpl implements  WarehouseService{
-    WarehouseRepository warehouseRepository;
-
-    public WarehouseServiceImpl(WarehouseRepository warehouseRepository) {
-        this.warehouseRepository = warehouseRepository;
-    }
-
+    private final WarehouseRepository warehouseRepository;
 
     @Override
     public List<Warehouse> findAll() {

@@ -1,17 +1,15 @@
 package pl.packagemanagement.model.recipient;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class RecipientServiceImpl implements RecipientService {
-    ReicpientRepository reicpientRepository;
-
-    public RecipientServiceImpl(ReicpientRepository reicpientRepository) {
-        this.reicpientRepository = reicpientRepository;
-    }
+    private final ReicpientRepository reicpientRepository;
 
     @Override
     public List<Recipient> findAll() {

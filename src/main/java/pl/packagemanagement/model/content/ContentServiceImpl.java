@@ -1,17 +1,15 @@
 package pl.packagemanagement.model.content;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ContentServiceImpl implements ContentService {
-    ContentRepository contentRepository;
-
-    public ContentServiceImpl(ContentRepository contentRepository) {
-        this.contentRepository = contentRepository;
-    }
+    private final ContentRepository contentRepository;
 
     @Override
     public List<Content> findAll() {

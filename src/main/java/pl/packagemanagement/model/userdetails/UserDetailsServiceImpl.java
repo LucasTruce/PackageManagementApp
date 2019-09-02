@@ -1,25 +1,20 @@
 package pl.packagemanagement.model.userdetails;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.packagemanagement.model.role.Role;
 import pl.packagemanagement.model.role.RoleRepository;
+import pl.packagemanagement.model.user.User;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserDetailsRepository userDetailsRepository;
-    private final RoleRepository roleRepository;
-
-
-
-    @Autowired
-    public UserDetailsServiceImpl(UserDetailsRepository userDetailsRepository, RoleRepository roleRepository) {
-        this.userDetailsRepository = userDetailsRepository;
-        this.roleRepository = roleRepository;
-    }
 
     @Override
     public List<UserDetails> findAll() {
@@ -38,7 +33,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     //zrobic funkcje na update uzytkownika z pozycjami
     @Override
-    public UserDetails save(UserDetails userDetails) {
+    public UserDetails save(UserDetails userDetails, User user) {
+        userDetails.setUser(user);
+        user.setUserDetails(userDetails);
         return userDetailsRepository.save(userDetails);
     }
 

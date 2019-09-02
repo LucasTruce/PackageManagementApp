@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.userdetails;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("userdetails")
+@RequiredArgsConstructor
 @CrossOrigin
 public class UserDetailsController {
     private final UserDetailsService userDetailsService;
-
-    @Autowired
-    public UserDetailsController(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<List<UserDetails>> findAllUsersDetails(){
@@ -40,15 +38,16 @@ public class UserDetailsController {
             return new ResponseEntity<>(tempUser, HttpStatus.OK);
     }
 
-
-    @DeleteMapping
-    public ResponseEntity<UserDetails> deleteUser(@RequestBody UserDetails userDetails){
-        userDetailsService.delete(userDetails);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/")   //userdetails/?login=
+    public ResponseEntity<UserDetails> saveUserDetails(@RequestParam(name = "login") String login, @Valid @RequestBody UserDetails userDetails){
+        User user = userService.findByLoginOrEmail(login).orElseThrow(
+                () -> new EntityNotFoundException("User not found, login: " + login)
+        );
+        return new ResponseEntity<>(userDetailsService.save(userDetails, user), HttpStatus.OK);
     }
 
 
-    @PutMapping
+    @PutMapping("/")
     public  ResponseEntity<UserDetails> updateUser(@Valid @RequestBody UserDetails userDetails){
         UserDetails tempUserDetails = userDetailsService.findById(userDetails.getId()).orElseThrow(
                 () -> new EntityNotFoundException("User not found, id: " + userDetails.getId())

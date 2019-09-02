@@ -29,6 +29,7 @@ public class JwtAuthenticationController {
 
     @Autowired
     private UserServiceImpl passwordService;
+
     @Autowired
     private RoleService roleService;
 

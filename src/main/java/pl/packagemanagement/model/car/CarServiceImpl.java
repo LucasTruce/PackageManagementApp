@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.car;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.packagemanagement.model.car.Car;
 import pl.packagemanagement.model.car.CarRepository;
@@ -9,13 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CarServiceImpl implements CarService {
 
-    CarRepository carRepository;
-
-    public CarServiceImpl(CarRepository carRepository) {
-        this.carRepository = carRepository;
-    }
+    private final CarRepository carRepository;
 
     @Override
     public List<Car> findAll() {
@@ -35,6 +33,5 @@ public class CarServiceImpl implements CarService {
     @Override
     public void delete(Car car) {
         carRepository.delete(car);
-
     }
 }

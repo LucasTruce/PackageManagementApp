@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("users")
+@RequiredArgsConstructor
 @CrossOrigin
 public class UserController {
     private final UserService userService;
-    private final RoleService roleService;
-    private final String userRole = "ROLE_USER";
-
-    @Autowired
-    public UserController(UserService userService, RoleService roleService) {
-        this.userService = userService;
-        this.roleService = roleService;
-    }
 
     @GetMapping
     public ResponseEntity<List<User>> findAll(){

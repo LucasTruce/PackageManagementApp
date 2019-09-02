@@ -1,18 +1,17 @@
 package pl.packagemanagement.model.pack;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PackageServiceImpl implements PackageService {
 
-    PackageRepository packageRepository;
+    private final PackageRepository packageRepository;
 
-    public PackageServiceImpl(PackageRepository packageRepository) {
-        this.packageRepository = packageRepository;
-    }
 
     @Override
     public List<Package> findAll() {
