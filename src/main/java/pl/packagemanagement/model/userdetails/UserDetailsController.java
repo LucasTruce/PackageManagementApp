@@ -47,11 +47,12 @@ public class UserDetailsController {
     }
 
 
-    @PutMapping("/")
-    public  ResponseEntity<UserDetails> updateUser(@Valid @RequestBody UserDetails userDetails){
+    @PutMapping("/") //userdetails/?login=
+    public  ResponseEntity<UserDetails> updateUser(@RequestParam(name = "login") String login, @Valid @RequestBody UserDetails userDetails){
         UserDetails tempUserDetails = userDetailsService.findById(userDetails.getId()).orElseThrow(
                 () -> new EntityNotFoundException("User not found, id: " + userDetails.getId())
         );
+        userDetails.setUser(tempUserDetails.getUser());
         userDetailsService.update(userDetails);
 
         return new ResponseEntity<>(userDetails, HttpStatus.OK);

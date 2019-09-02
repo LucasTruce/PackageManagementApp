@@ -28,6 +28,15 @@ public class UserController {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/")    // users/?login=
+    public ResponseEntity<User> findUser(@RequestParam(name = "login") String login){
+        User user = userService.findByLoginOrEmail(login).orElseThrow(
+                () -> new EntityNotFoundException("User not found, login: " + login)
+        );
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
     @PutMapping     //users
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user){
         User tempPass = userService.findById(user.getId()).orElseThrow(
