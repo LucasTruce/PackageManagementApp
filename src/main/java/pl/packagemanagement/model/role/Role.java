@@ -13,9 +13,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "role")
-@JsonIgnoreProperties({"users"})
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties({"users"})
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,6 +8,10 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import pl.packagemanagement.exception.EntityNotFoundException;
+import pl.packagemanagement.model.role.Role;
+import pl.packagemanagement.model.role.RoleName;
+import pl.packagemanagement.model.role.RoleService;
 import pl.packagemanagement.model.user.User;
 import pl.packagemanagement.model.user.UserServiceImpl;
 
@@ -25,8 +29,10 @@ public class JwtAuthenticationController {
 
     @Autowired
     private UserServiceImpl passwordService;
+    @Autowired
+    private RoleService roleService;
 
-    @RequestMapping("/authenticate")
+    @RequestMapping("/authenticate")    //return TOKEN
     @PostMapping
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception{
         authenticate(authenticationRequest.getLogin(), authenticationRequest.getPassword());
@@ -38,11 +44,10 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @RequestMapping("/register")
+    @RequestMapping("/register")    //ADD NEW USER WITH DEFAULT ROLE: ROLE_USER
     @PostMapping
     public ResponseEntity<?> savePassword(@RequestBody @Valid User user) throws Exception {
         return ResponseEntity.ok(passwordService.save(user));
-
     }
 
     private void authenticate(String login, String password) throws Exception {

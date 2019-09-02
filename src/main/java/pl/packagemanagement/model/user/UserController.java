@@ -5,12 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.model.role.Role;
+import pl.packagemanagement.model.role.RoleName;
 import pl.packagemanagement.model.role.RoleService;
 import pl.packagemanagement.model.userdetails.UserDetails;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.userdetails.UserDetailsService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,23 +29,9 @@ public class UserController {
         this.roleService = roleService;
     }
 
-
     @GetMapping
     public ResponseEntity<List<User>> findAll(){
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
-    }
-
-    @GetMapping("/")  // /?login=
-    public ResponseEntity<User> findByLogin(@RequestParam(name = "login") String login) {
-        User user = userService.findByLoginOrEmail(login).orElseThrow(
-                () -> new EntityNotFoundException("User not found, login/email: " + login)
-        );
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    @PostMapping    //users
-    public ResponseEntity<User> saveUser(@Valid @RequestBody User user){
-        return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
     }
 
     @PutMapping     //users

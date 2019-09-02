@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -56,5 +57,5 @@ public class User {
                     joinColumns = {@JoinColumn(name = "uzytkownicy_id", referencedColumnName = "id_uzytkownicy")},
                     inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id_role")}
     )
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 }

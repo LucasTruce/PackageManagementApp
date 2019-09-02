@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleRepository roleRepository;
     private static final String DEFAULT_ROLE = "ROLE_USER";
 
+
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
@@ -40,8 +41,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User save(User user)
     {
         user.setPassword(bcryptEncoder.encode(user.getPassword()));
-        Role role = roleRepository.findByName("ROLE_USER");
-        user.getRoles().add(role);
+        Role tempRole = roleRepository.findByName(RoleName.ROLE_USER);
+        user.getRoles().add(tempRole);
+
+        List<Role> roles = user.getRoles();
+        for (Role role: roles) {
+            role.getUsers().add(user);
+        }
+
         return userRepository.save(user);
     }
 
