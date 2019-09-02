@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.role.Role;
 import pl.packagemanagement.model.role.RoleName;
 import pl.packagemanagement.model.role.RoleRepository;
@@ -35,6 +36,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User save(User user)
     {
+        if(!userRepository.findByLoginOrEmail(user.getLogin(), user.getEmail()).isEmpty())
+            throw new EntityNotFoundException("Login/email zajety!");
+
         user.setPassword(bcryptEncoder.encode(user.getPassword()));
         Role tempRole = roleRepository.findByName(RoleName.ROLE_USER);
         user.getRoles().add(tempRole);
@@ -64,8 +68,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Optional<User> findByLoginOrEmail(String login) {
-        return userRepository.findByLoginOrEmail(login, login);
+    public Optional<User> findByLoginOrEmail(String login, String email) {
+        return userRepository.findByLoginOrEmail(login, email);
     }
 
     @Override

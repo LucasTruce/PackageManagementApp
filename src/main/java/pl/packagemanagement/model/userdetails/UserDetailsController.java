@@ -40,7 +40,7 @@ public class UserDetailsController {
 
     @PostMapping("/")   //userdetails/?login=
     public ResponseEntity<UserDetails> saveUserDetails(@RequestParam(name = "login") String login, @Valid @RequestBody UserDetails userDetails){
-        User user = userService.findByLoginOrEmail(login).orElseThrow(
+        User user = userService.findByLoginOrEmail(login, login).orElseThrow(
                 () -> new EntityNotFoundException("User not found, login: " + login)
         );
         return new ResponseEntity<>(userDetailsService.save(userDetails, user), HttpStatus.OK);

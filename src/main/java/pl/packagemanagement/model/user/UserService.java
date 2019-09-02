@@ -12,6 +12,6 @@ public interface UserService {
     User update(User user);
     Optional<User> findById(Long id);
     List<User> findAll();
-    Optional<User> findByLoginOrEmail(String login);
+    Optional<User> findByLoginOrEmail(String login, String email);
 
 }

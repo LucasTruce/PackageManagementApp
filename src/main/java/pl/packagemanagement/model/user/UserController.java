@@ -30,7 +30,7 @@ public class UserController {
 
     @GetMapping("/")    // users/?login=
     public ResponseEntity<User> findUser(@RequestParam(name = "login") String login){
-        User user = userService.findByLoginOrEmail(login).orElseThrow(
+        User user = userService.findByLoginOrEmail(login, login).orElseThrow(
                 () -> new EntityNotFoundException("User not found, login: " + login)
         );
 
