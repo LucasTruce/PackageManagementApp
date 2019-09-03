@@ -3,6 +3,8 @@ package pl.packagemanagement.model.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,9 +15,7 @@ import pl.packagemanagement.model.role.RoleName;
 import pl.packagemanagement.model.role.RoleRepository;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Role tempRole = roleRepository.findByName(RoleName.ROLE_USER);
         user.getRoles().add(tempRole);
 
-        List<Role> roles = user.getRoles();
+        Set<Role> roles = user.getRoles();
         for (Role role: roles) {
             role.getUsers().add(user);
         }
@@ -80,8 +80,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     //security
     @Override
     public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Optional<User> pass = userRepository.findByLoginOrEmail(login, login);
-        return new org.springframework.security.core.userdetails.User(pass.get().getLogin(), pass.get().getPassword(),
-                new ArrayList<>());
+        Optional<User> user = userRepository.findByLoginOrEmail(login, login);
+        return new org.springframework.security.core.userdetails.User(user.get().getLogin(), user.get().getPassword(),
+                convertAuthorities(user.get().getRoles()));
+    }
+
+    private Set<GrantedAuthority> convertAuthorities(Set<Role> roles){
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        for(Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName().toString()));
+        }
+        return authorities;
     }
 }

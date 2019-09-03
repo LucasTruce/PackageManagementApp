@@ -55,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/authenticate").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/register").permitAll() //pozwol na nieautoryzowany dostep podczas rejestracji!!
+                .antMatchers("/userdetails").hasRole("ADMIN") //dostep do wyswietlania wszystkich informacji o uzytkownikach maja tylko admini!
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

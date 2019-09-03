@@ -12,11 +12,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "uzytkownicy")
-@JsonIgnoreProperties({"user", "packages", "roles", "userDetails"})
+@JsonIgnoreProperties({"user", "packages", "userDetails"})
 @Data
 @NoArgsConstructor
 public class User {
@@ -52,10 +54,10 @@ public class User {
     )
     private List<Package> packages;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER) //wczytujemy role od razu (LAZY mowi o tym by byly wczytane przy uzyciu getera lub gdy sa potrzebne)
     @JoinTable(name = "role_uzytkownikow",
                     joinColumns = {@JoinColumn(name = "uzytkownicy_id", referencedColumnName = "id_uzytkownicy")},
                     inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id_role")}
     )
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 }
