@@ -28,17 +28,14 @@ public class JwtAuthenticationController {
     private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private UserServiceImpl passwordService;
-
-    @Autowired
-    private RoleService roleService;
+    private UserServiceImpl userService;
 
     @RequestMapping("/authenticate")    //return TOKEN
     @PostMapping
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception{
         authenticate(authenticationRequest.getLogin(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = passwordService.loadUserByUsername(authenticationRequest.getLogin());
+        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getLogin());
 
         final String token = jwtTokenProvider.generateToken(userDetails);
 
@@ -47,8 +44,11 @@ public class JwtAuthenticationController {
 
     @RequestMapping("/register")    //ADD NEW USER WITH DEFAULT ROLE: ROLE_USER
     @PostMapping
-    public ResponseEntity<?> savePassword(@RequestBody @Valid User user) throws Exception {
-        return ResponseEntity.ok(passwordService.save(user));
+    public ResponseEntity<?> savePassword(@RequestBody @Valid User user) {
+        if(userService.findByLoginOrEmail(user.getLogin(), user.getEmail()).isPresent())
+            throw new EntityNotFoundException("Login/email zajety!");
+
+        return ResponseEntity.ok(userService.save(user));
     }
 
     private void authenticate(String login, String password) throws Exception {

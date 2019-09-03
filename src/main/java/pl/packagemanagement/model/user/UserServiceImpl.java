@@ -36,9 +36,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User save(User user)
     {
-        if(!userRepository.findByLoginOrEmail(user.getLogin(), user.getEmail()).isEmpty())
-            throw new EntityNotFoundException("Login/email zajety!");
-
         user.setPassword(bcryptEncoder.encode(user.getPassword()));
         Role tempRole = roleRepository.findByName(RoleName.ROLE_USER);
         user.getRoles().add(tempRole);
@@ -81,8 +78,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByLoginOrEmail(login, login);
-        return new org.springframework.security.core.userdetails.User(user.get().getLogin(), user.get().getPassword(),
-                convertAuthorities(user.get().getRoles()));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.get().getLogin(),
+                user.get().getPassword(),
+                convertAuthorities(user.get().getRoles())
+        );
     }
 
     private Set<GrantedAuthority> convertAuthorities(Set<Role> roles){
@@ -90,6 +91,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         for(Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName().toString()));
         }
+
         return authorities;
     }
 }
