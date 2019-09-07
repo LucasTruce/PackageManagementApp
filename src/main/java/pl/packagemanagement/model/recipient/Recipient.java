@@ -11,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,7 +36,6 @@ public class Recipient {
     private String lastName;
 
     @Column(name = "nazwa_firmy", length = 80)
-    @NotBlank
     private String companyName;
 
     @Column(name = "ulica", length = 72)
@@ -44,9 +44,9 @@ public class Recipient {
     private String street;
 
     @Column(name = "kod_pocztowy")
-    @NotBlank
-    @Range(min = 00000, max = 99999, message = "post code must have 5 digits")
-    private int postCode;
+    @Size(min = 6, message = "Podaj poprawny format kodu! (xx-zz)")
+    @Pattern(regexp = "([\\d]{2})-([\\d]{3})", message = "Podaj poprawny format kodu! (xx-zz)")
+    private String postCode;
 
     @Column(name = "miasto", length = 39)
     @NotBlank
@@ -56,7 +56,7 @@ public class Recipient {
     @Column(name = "telefon", length = 13)
     @NotBlank
     @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})", message = "only 9digits number and with +48") //+48123456789 oraz 123456789
-    private String number;
+    private String phoneNumber;
 
     @Column(name = "email", length = 30)
     @NotBlank
@@ -64,7 +64,7 @@ public class Recipient {
     private String email;
 
     @OneToMany(mappedBy = "recipient")
-    private List<Package> packages;
+    private List<Package> packages = new ArrayList<>();
 
 
 

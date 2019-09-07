@@ -1,4 +1,4 @@
-package pl.packagemanagement.response;
+package pl.packagemanagement.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

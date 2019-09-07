@@ -1,6 +1,7 @@
 package pl.packagemanagement.model.pack;
 
 import pl.packagemanagement.model.pack.Package;
+import pl.packagemanagement.model.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,5 +11,5 @@ public interface PackageService {
     Optional<Package> findById(Long id);
     Optional<Package> findByNumber(String number);
     void delete(Package pack);
-    Package save(Package pack);
+    Package save(Package pack, User user);
 }

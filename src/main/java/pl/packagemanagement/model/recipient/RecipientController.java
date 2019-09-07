@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.packagemanagement.model.pack.Package;
+import pl.packagemanagement.model.pack.PackageService;
 import pl.packagemanagement.model.recipient.Recipient;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.recipient.RecipientService;
@@ -15,9 +17,11 @@ import java.util.List;
 @RestController
 @RequestMapping("recipients")
 @RequiredArgsConstructor
+@CrossOrigin
 public class RecipientController {
 
     private final RecipientService recipientService;
+    private final PackageService packageService;
 
 
     @GetMapping
@@ -32,9 +36,14 @@ public class RecipientController {
         ), HttpStatus.OK);
     }
 
-    @PostMapping
-    public void save(@Valid @RequestBody Recipient recipient){
-        recipientService.save(recipient);
+    @PostMapping    //recipients/?packId=
+    public ResponseEntity<Recipient> save(@RequestParam(name = "packId") Long packId, @Valid @RequestBody Recipient recipient){
+        Package pack = packageService.findById(packId).orElseThrow(
+                () -> new EntityNotFoundException("Package not found, id: " + packId)
+        );
+        recipient.getPackages().add(pack);
+        pack.setRecipient(recipient);
+        return new ResponseEntity<>(recipientService.save(recipient), HttpStatus.OK);
     }
 
     @DeleteMapping

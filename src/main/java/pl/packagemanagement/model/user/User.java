@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,7 @@ public class User {
             joinColumns = {@JoinColumn(name = "uzytkownicy_id", referencedColumnName = "id_uzytkownicy")},
             inverseJoinColumns = {@JoinColumn(name = "paczki_id", referencedColumnName = "id_paczki")}
     )
-    private List<Package> packages;
+    private List<Package> packages = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER) //wczytujemy role od razu (LAZY mowi o tym by byly wczytane przy uzyciu getera lub gdy sa potrzebne)
     @JoinTable(name = "role_uzytkownikow",

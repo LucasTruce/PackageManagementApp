@@ -16,6 +16,7 @@ import pl.packagemanagement.model.warehouse.Warehouse;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,12 +30,10 @@ public class Package {
     @Column(name = "id_paczki")
     private long id;
 
-    @Column(name = "numer_paczki", length = 14)
-    @NotBlank
+    @Column(name = "numer_paczki", length = 13)
     private String packageNumber;
 
     @Column(name = "data_nadania")  //columnDefinition mozna tez wpisac np. NVARCHAR(500) NOT NULL itp..//??
-    @NotBlank
     private LocalDateTime date;
 
     @Column(name = "wysokosc")
@@ -83,7 +82,7 @@ public class Package {
     //N:M
     //Uzytkownicy
     @ManyToMany(mappedBy = "packages")
-    private List<User> usersKey;
+    private List<User> users = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "paczki_magazyny",
