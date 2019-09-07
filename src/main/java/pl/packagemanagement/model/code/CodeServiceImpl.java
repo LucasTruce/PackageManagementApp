@@ -2,6 +2,7 @@ package pl.packagemanagement.model.code;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.packagemanagement.model.pack.Package;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +23,8 @@ public class CodeServiceImpl implements CodeService {
     }
 
     @Override
-    public Code save(Code code) {
-        return codeRepository.save(code);
+    public void save(Code code) {
+        codeRepository.save(code);
     }
 
     @Override

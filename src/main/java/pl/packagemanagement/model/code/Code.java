@@ -37,4 +37,9 @@ public class Code {
 
     @OneToOne(mappedBy = "code")
     private Product product;
+
+    public Code(String filePath, Package pack){
+        this.filePath = filePath;
+        this.pack = pack;
+    }
 }

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pl.packagemanagement.model.code.Code;
+import pl.packagemanagement.model.code.CodeService;
 import pl.packagemanagement.model.pack.Package;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.pack.PackageService;
@@ -53,6 +55,7 @@ public class PackageController {
         User user = userService.findByLoginOrEmail(login, login).orElseThrow(
                 () -> new EntityNotFoundException("User not found, id: " + login)
         );
+
         return new ResponseEntity<>(packageService.save(pack, user), HttpStatus.OK);
     }
 }

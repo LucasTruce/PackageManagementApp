@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.model.code.Code;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.code.CodeService;
+import pl.packagemanagement.model.pack.Package;
+import pl.packagemanagement.model.pack.PackageService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -15,8 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("codes")
 @RequiredArgsConstructor
+@CrossOrigin
 public class CodeController {
     private final CodeService codeService;
+    private final PackageService packageService;
 
     @GetMapping
     public ResponseEntity<List<Code>> findAll(){
@@ -31,7 +35,14 @@ public class CodeController {
     }
 
     @PostMapping
-    public void save(@Valid @RequestBody Code code){
+    public void save(@RequestParam(name = "packId") Long packId, @Valid @RequestBody Code code){
+        Package tempPack = packageService.findById(packId).orElseThrow(
+                () -> new EntityNotFoundException("package not found!")
+        );
+
+        tempPack.setCode(code);
+        code.setPack(tempPack);
+
         codeService.save(code);
     }
 
