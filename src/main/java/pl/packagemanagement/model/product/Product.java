@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "towary")
-@JsonIgnoreProperties({"content", "category"})
+@JsonIgnoreProperties({"content"})
 @Data
 @NoArgsConstructor
 public class Product {
@@ -26,7 +26,7 @@ public class Product {
     private String name;
 
     @Column(name = "waga")
-    private float waga;
+    private float weight;
 
     @Column(name = "uwagi", length = 45)
     @NotBlank

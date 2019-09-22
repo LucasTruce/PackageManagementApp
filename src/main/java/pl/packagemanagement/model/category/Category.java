@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.packagemanagement.model.product.Product;
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "kategorie")
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties({"products"})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

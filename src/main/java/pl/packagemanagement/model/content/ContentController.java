@@ -1,13 +1,12 @@
 package pl.packagemanagement.model.content;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.packagemanagement.model.content.Content;
 import pl.packagemanagement.exception.EntityNotFoundException;
-import pl.packagemanagement.model.content.ContentService;
+import pl.packagemanagement.model.pack.Package;
+import pl.packagemanagement.model.pack.PackageService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -15,9 +14,11 @@ import java.util.List;
 @RestController
 @RequestMapping("content")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ContentController {
 
     private final ContentService contentService;
+    private final PackageService packageService;
 
     @GetMapping
     public ResponseEntity<List<Content>> findAll(){
@@ -32,8 +33,11 @@ public class ContentController {
     }
 
     @PostMapping
-    public void save(@Valid  @RequestBody Content content){
-        contentService.save(content);
+    public ResponseEntity<Content> save(@Valid  @RequestBody Content content, @RequestParam(name = "packId") Long packId){
+        Package tempPack = packageService.findById(packId).orElseThrow( () -> new EntityNotFoundException("Package not found, id: " + packId));
+        content.setPack(tempPack);
+        tempPack.setContent(content);
+        return new ResponseEntity<>(contentService.save(content), HttpStatus.OK);
     }
 
     @DeleteMapping

@@ -2,6 +2,9 @@ package pl.packagemanagement.model.product;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.packagemanagement.model.category.Category;
+import pl.packagemanagement.model.category.CategoryRepository;
+import pl.packagemanagement.model.content.Content;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService{
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public List<Product> findAll() {
@@ -24,6 +28,17 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Product save(Product product) {
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> saveAll(List<Product> products, Content tempContent) {
+        for (Product product: products) {
+            Category tempCategory = categoryRepository.findCategoryById(product.getCategory().getId());
+            tempCategory.getProducts().add(product);
+            product.setContent(tempContent);
+            tempContent.getProducts().add(product);
+        }
+        return productRepository.saveAll(products);
     }
 
     @Override

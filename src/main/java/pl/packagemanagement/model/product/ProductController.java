@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.packagemanagement.model.content.Content;
+import pl.packagemanagement.model.content.ContentService;
 import pl.packagemanagement.model.product.Product;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.product.ProductService;
@@ -15,9 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("products")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ProductController {
     private final ProductService productService;
-
+    private final ContentService contentService;
 
 
     @GetMapping
@@ -32,9 +35,10 @@ public class ProductController {
         ), HttpStatus.OK);
     }
 
-    @PostMapping
-    public void save(@Valid @RequestBody Product product){
-        productService.save(product);
+    @PostMapping("/") // products/?contentId=
+    public ResponseEntity<List<Product>> saveAll(@Valid @RequestBody List<Product> products, @RequestParam(name = "contentId") Long contentId){
+        Content tempContent = contentService.findById(contentId).orElseThrow(() -> new EntityNotFoundException("Content not found!"));
+        return new ResponseEntity<>(productService.saveAll(products, tempContent), HttpStatus.OK);
     }
 
     @DeleteMapping
