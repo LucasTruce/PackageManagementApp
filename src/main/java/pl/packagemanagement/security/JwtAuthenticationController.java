@@ -13,9 +13,11 @@ import pl.packagemanagement.model.role.Role;
 import pl.packagemanagement.model.role.RoleName;
 import pl.packagemanagement.model.role.RoleService;
 import pl.packagemanagement.model.user.User;
+import pl.packagemanagement.model.user.UserService;
 import pl.packagemanagement.model.user.UserServiceImpl;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -39,7 +41,9 @@ public class JwtAuthenticationController {
 
         final String token = jwtTokenProvider.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        Optional<User> user = userService.findByLoginOrEmail(authenticationRequest.getLogin(), authenticationRequest.getLogin());
+
+        return ResponseEntity.ok(new JwtResponse(token, user.get().getRoles()));
     }
 
     @RequestMapping("/register")    //ADD NEW USER WITH DEFAULT ROLE: ROLE_USER

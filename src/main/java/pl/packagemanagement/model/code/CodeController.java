@@ -10,9 +10,13 @@ import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.code.CodeService;
 import pl.packagemanagement.model.pack.Package;
 import pl.packagemanagement.model.pack.PackageService;
+import pl.packagemanagement.model.product.Product;
+import pl.packagemanagement.model.product.ProductService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("codes")
@@ -21,6 +25,7 @@ import java.util.List;
 public class CodeController {
     private final CodeService codeService;
     private final PackageService packageService;
+    private final ProductService productService;
 
     @GetMapping
     public ResponseEntity<List<Code>> findAll(){
@@ -34,8 +39,8 @@ public class CodeController {
         ), HttpStatus.OK);
     }
 
-    @PostMapping
-    public void save(@RequestParam(name = "packId") Long packId, @Valid @RequestBody Code code){
+    @PostMapping("/{packId}") // codes/packId
+    public void saveWithPackage(@PathVariable(name = "packId") Long packId, @Valid @RequestBody Code code){
         Package tempPack = packageService.findById(packId).orElseThrow(
                 () -> new EntityNotFoundException("package not found!")
         );
@@ -45,6 +50,18 @@ public class CodeController {
 
         codeService.save(code);
     }
+
+    @PostMapping // codes
+    public void saveWithProducts(@Valid @RequestBody List<Code> codes) {
+        for (Code code: codes) {
+            Product product = productService.findById(Long.valueOf(code.getFilePath())).orElseThrow(() -> new EntityNotFoundException("Product not found"));
+            product.setCode(code);
+            code.setProduct(product);
+        }
+        codeService.saveAll(codes);
+    }
+
+
 
     @DeleteMapping
     public ResponseEntity<Code> delete(@RequestBody Code code){

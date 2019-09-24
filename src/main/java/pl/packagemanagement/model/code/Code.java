@@ -3,6 +3,7 @@ package pl.packagemanagement.model.code;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 import pl.packagemanagement.model.pack.Package;
 import pl.packagemanagement.model.car.Car;
 import pl.packagemanagement.model.product.Product;
@@ -10,6 +11,7 @@ import pl.packagemanagement.model.warehouse.Warehouse;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 
 @Entity
 @Table(name = "kody")

@@ -16,6 +16,7 @@ import pl.packagemanagement.model.user.User;
 import pl.packagemanagement.model.user.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,7 +38,14 @@ public class PackageController {
         return new ResponseEntity<>(packageService.findById(id).orElseThrow(() -> new EntityNotFoundException("Package not found, id: " + id)), HttpStatus.OK);
     }
 
-    @GetMapping("/number/{packageNumber}")
+    @GetMapping("/") // packages/?login=
+    public ResponseEntity<List<Package>> findPackagesForUser(@RequestParam(name = "login") String login) {
+        User user = userService.findByLoginOrEmail(login, login).orElseThrow(() -> new EntityNotFoundException("User not found, login: " + login));
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        return new ResponseEntity<>(packageService.findByUsers(users), HttpStatus.OK);
+    }
+    @GetMapping("/number/{packageNumber}") // packages/number/X
     public ResponseEntity<Package> findPackageByNumber(@PathVariable String packageNumber){
         return new ResponseEntity<>(packageService.findByNumber(packageNumber).orElseThrow(
                 () -> new EntityNotFoundException("Package not found, packageNumber: " + packageNumber)

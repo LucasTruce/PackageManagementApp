@@ -10,6 +10,7 @@ public interface PackageService {
     List<Package> findAll();
     Optional<Package> findById(Long id);
     Optional<Package> findByNumber(String number);
+    List<Package> findByUsers(List<User> users);
     void delete(Package pack);
     Package save(Package pack, User user);
 }

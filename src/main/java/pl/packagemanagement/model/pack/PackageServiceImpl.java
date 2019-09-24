@@ -31,6 +31,11 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
+    public List<Package> findByUsers(List<User> users) {
+        return packageRepository.findPackagesByUsers(users);
+    }
+
+    @Override
     public void delete(Package pack) {
         packageRepository.delete(pack);
 

@@ -3,7 +3,10 @@ package pl.packagemanagement.model.code;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.packagemanagement.model.pack.Package;
+import pl.packagemanagement.model.product.Product;
+import pl.packagemanagement.model.product.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,11 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public void save(Code code) {
         codeRepository.save(code);
+    }
+
+    @Override
+    public void saveAll(List<Code> codes) {
+        codeRepository.saveAll(codes);
     }
 
     @Override

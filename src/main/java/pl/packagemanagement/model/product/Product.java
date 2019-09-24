@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "towary")
-@JsonIgnoreProperties({"content"})
+@JsonIgnoreProperties({})
 @Data
 @NoArgsConstructor
 public class Product {
@@ -43,4 +43,5 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "zawartosc_id")
     private Content content;
+
 }
