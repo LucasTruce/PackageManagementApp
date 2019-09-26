@@ -52,10 +52,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.
                 cors().and().
                 csrf().disable()
-                .authorizeRequests().antMatchers("/authenticate").permitAll()   //logowanie uzytkownika
+                .authorizeRequests().antMatchers("/authenticate").permitAll() //logowanie uzytkownika
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/register").permitAll() //pozwol na nieautoryzowany dostep podczas rejestracji!!
-                .antMatchers("/userdetails").hasRole("ADMIN") //dostep do wyswietlania wszystkich informacji o uzytkownikach maja tylko admini!
+                .antMatchers("/register").permitAll() //dostep nieautoryzowany podczas rejestracji
+                .antMatchers("/userdetails").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                .antMatchers("/users/{userId}").hasRole("ADMIN")  //get /users/x with parameters
+                .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN", "USER", "WORKER")
+                .antMatchers(HttpMethod.GET, "/warehouses").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/cars").hasRole("ADMIN")
                 .antMatchers("/packages", "/senders", "/recipients", "/categories", "products").hasAnyRole("ADMIN", "USER", "WORKER")
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

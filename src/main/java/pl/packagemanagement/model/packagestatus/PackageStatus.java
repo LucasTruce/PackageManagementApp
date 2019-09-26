@@ -7,10 +7,12 @@ import pl.packagemanagement.model.pack.Package;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "status_paczki")
-@JsonIgnoreProperties({"pack"})
+@JsonIgnoreProperties({"packages"})
 @Data
 @NoArgsConstructor
 public class PackageStatus {
@@ -27,7 +29,7 @@ public class PackageStatus {
     @NotBlank
     private String description;
 
-    @OneToOne(mappedBy = "status")
-    private Package pack;
+    @OneToMany(mappedBy = "packageStatus")
+    private List<Package> packages = new ArrayList<>();
 
 }

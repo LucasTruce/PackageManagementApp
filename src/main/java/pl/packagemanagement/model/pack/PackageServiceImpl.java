@@ -3,6 +3,9 @@ package pl.packagemanagement.model.pack;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import pl.packagemanagement.exception.EntityNotFoundException;
+import pl.packagemanagement.model.packagestatus.PackageStatus;
+import pl.packagemanagement.model.packagestatus.PackageStatusService;
 import pl.packagemanagement.model.user.User;
 
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.Optional;
 public class PackageServiceImpl implements PackageService {
 
     private final PackageRepository packageRepository;
+    private final PackageStatusService packageStatusService;
 
 
     @Override
@@ -45,6 +49,9 @@ public class PackageServiceImpl implements PackageService {
     public Package save(Package pack, User user) {
         String generatedString = RandomStringUtils.random(13, false, true);
         if(packageRepository.findByPackageNumber(generatedString).isEmpty()) {
+            PackageStatus packageStatus = packageStatusService.findById(3l).get();
+            packageStatus.getPackages().add(pack);
+            pack.setPackageStatus(packageStatus);
             pack.setPackageNumber(generatedString);
             pack.getUsers().add(user);
             user.getPackages().add(pack);

@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User tempPass = userRepository.findById(user.getId()).get();
 
         tempPass.setLogin(user.getLogin());
-        tempPass.setPassword(user.getEmail());
+        tempPass.setEmail(user.getEmail());
         tempPass.setPassword(bcryptEncoder.encode(user.getPassword()));
 
         return userRepository.save(tempPass);

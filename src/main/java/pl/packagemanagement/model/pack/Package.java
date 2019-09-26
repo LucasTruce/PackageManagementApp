@@ -54,9 +54,9 @@ public class Package {
 
     //1:1
     //Status_paczki
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "status_id")
-    private PackageStatus status;
+    private PackageStatus packageStatus;
 
     @OneToOne
     @JoinColumn(name = "zawartosc_id")

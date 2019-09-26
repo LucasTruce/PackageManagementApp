@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("warehouses")
 @RequiredArgsConstructor
+@CrossOrigin
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
@@ -32,8 +33,9 @@ public class WarehouseController {
     }
 
     @PostMapping
-    public void save(@Valid @RequestBody Warehouse warehouse){
-        warehouseService.save(warehouse);
+    public ResponseEntity<Warehouse> save(@Valid @RequestBody Warehouse warehouse){
+
+        return new ResponseEntity<>(warehouseService.save(warehouse), HttpStatus.OK);
     }
 
     @DeleteMapping

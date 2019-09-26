@@ -3,7 +3,9 @@ package pl.packagemanagement.model.user;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import pl.packagemanagement.model.pack.Package;
 import pl.packagemanagement.model.role.Role;
 import pl.packagemanagement.model.userdetails.UserDetails;
@@ -19,7 +21,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "uzytkownicy")
-@JsonIgnoreProperties({"user", "packages", "userDetails"})
+@JsonIgnoreProperties({"user", "packages"})
 @Data
 @NoArgsConstructor
 public class User {

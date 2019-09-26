@@ -31,7 +31,6 @@ public class UserDetailsController {
 
     @GetMapping("/")   //   userdetails?login=nazwa
     public ResponseEntity<UserDetails> findByLogin(@RequestParam(name = "login") String login){
-
         UserDetails tempUser = userDetailsService.findByUserLoginOrUserEmail(login).orElseThrow(
                 () -> new EntityNotFoundException("UserDetails not found, login/email: " + login)
         );

@@ -1,8 +1,11 @@
 package pl.packagemanagement.model.userdetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Range;
 import pl.packagemanagement.model.role.Role;
 import pl.packagemanagement.model.pack.Package;
@@ -59,6 +62,4 @@ public class UserDetails {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "uzytkownik_id")
     private User user;
-
-
 }

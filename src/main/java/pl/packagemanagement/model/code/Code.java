@@ -29,19 +29,18 @@ public class Code {
     private String filePath;
 
     @OneToOne(mappedBy = "code")
+    @Nullable
     private Car car;
 
     @OneToOne(mappedBy = "code")
+    @Nullable
     private Package pack;
 
     @OneToOne(mappedBy = "code")
+    @Nullable
     private Warehouse warehouse;
 
     @OneToOne(mappedBy = "code")
+    @Nullable
     private Product product;
-
-    public Code(String filePath, Package pack){
-        this.filePath = filePath;
-        this.pack = pack;
-    }
 }

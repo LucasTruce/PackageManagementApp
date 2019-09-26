@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/packstatus")
 @RequiredArgsConstructor
+@CrossOrigin
 public class PackageStatusController {
     private final PackageStatusService packStatusService;
 

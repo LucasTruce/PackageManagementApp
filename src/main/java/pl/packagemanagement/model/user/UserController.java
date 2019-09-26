@@ -36,6 +36,11 @@ public class UserController {
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> findUserById(@PathVariable Long userId) {
+        User user = userService.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 
     @PutMapping     //users
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user){
@@ -45,9 +50,9 @@ public class UserController {
         return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
     }
 
-    @DeleteMapping    //users
-    public ResponseEntity<User> deletePassword(@RequestBody User user){
-        userService.delete(user);
+    @DeleteMapping //users?id=
+    public ResponseEntity<User> deleteUser(@RequestParam(name = "id") Long id){
+        userService.delete(userService.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found")));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
