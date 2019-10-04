@@ -11,5 +11,5 @@ public interface ProductService {
     Optional<Product> findById(Long id);
     Product save(Product product);
     List<Product> saveAll(List<Product> products, Content tempContent);
-    void delete(Product product);
+    void deleteAll(List<Product> products);
 }

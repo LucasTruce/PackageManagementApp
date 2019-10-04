@@ -19,7 +19,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "zawartosc")
-@JsonIgnoreProperties({"pack", "products"})
+@JsonIgnoreProperties({"pack"})
 @Data
 @NoArgsConstructor
 public class Content {

@@ -62,7 +62,7 @@ public class Package {
     @JoinColumn(name = "zawartosc_id")
     private Content content;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "kody_id")
     private Code code;
 

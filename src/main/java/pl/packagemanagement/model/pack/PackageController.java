@@ -3,6 +3,7 @@ package pl.packagemanagement.model.pack;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,18 +36,23 @@ public class PackageController {
         return new ResponseEntity<>(packageService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Package> findById(@PathVariable Long id){
+   @GetMapping("/{id}")
+   public ResponseEntity<Package> findById(@PathVariable Long id){
         return new ResponseEntity<>(packageService.findById(id).orElseThrow(() -> new EntityNotFoundException("Package not found, id: " + id)), HttpStatus.OK);
     }
 
     @GetMapping("/") // packages/?login=
-    public ResponseEntity<List<Package>> findPackagesForUser(@RequestParam(name = "login") String login) {
+    public ResponseEntity<Page<Package>> findPackagesForUser(@RequestParam(name = "login") String login,
+                                                             @RequestParam(defaultValue = "0") int pageNumber,
+                                                             @RequestParam(defaultValue = "10") int pageSize,
+                                                             @RequestParam(defaultValue = "id") String orderBy,
+                                                             @RequestParam(defaultValue = "ASC") String direction) {
         User user = userService.findByLoginOrEmail(login, login).orElseThrow(() -> new EntityNotFoundException("User not found, login: " + login));
         List<User> users = new ArrayList<>();
         users.add(user);
-        return new ResponseEntity<>(packageService.findByUsers(users), HttpStatus.OK);
+        return new ResponseEntity<>(packageService.findByUsers(users, pageNumber, pageSize, orderBy, direction), HttpStatus.OK);
     }
+
     @GetMapping("/number/{packageNumber}") // packages/number/X
     public ResponseEntity<Package> findPackageByNumber(@PathVariable String packageNumber){
         return new ResponseEntity<>(packageService.findByNumber(packageNumber).orElseThrow(
@@ -55,8 +61,8 @@ public class PackageController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Package> delete(@RequestBody Package pack){
-        packageService.delete(pack);
+    public ResponseEntity<Package> delete(@RequestParam(name = "id") Long id){
+        packageService.delete(packageService.findById(id).orElseThrow(() -> new EntityNotFoundException("Package not found")));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -67,5 +73,10 @@ public class PackageController {
         );
 
         return new ResponseEntity<>(packageService.save(pack, user), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<Package> updatePackage(@Valid @RequestBody Package pack) {
+        return new ResponseEntity<>(packageService.update(pack), HttpStatus.OK);
     }
 }

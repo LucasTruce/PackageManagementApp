@@ -48,4 +48,9 @@ public class SenderController {
         senderService.delete(sender);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping
+    public ResponseEntity<Sender> update(@Valid @RequestBody Sender sender) {
+        return new ResponseEntity<>(senderService.save(sender), HttpStatus.OK);
+    }
 }

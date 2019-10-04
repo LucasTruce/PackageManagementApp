@@ -46,7 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
     @Override
     protected  void configure(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.
@@ -61,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN", "USER", "WORKER")
                 .antMatchers(HttpMethod.GET, "/warehouses").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/cars").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/packages/number/{packageNumber}").permitAll()
                 .antMatchers("/packages", "/senders", "/recipients", "/categories", "products").hasAnyRole("ADMIN", "USER", "WORKER")
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()

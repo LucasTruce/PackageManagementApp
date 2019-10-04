@@ -41,9 +41,15 @@ public class ProductController {
         return new ResponseEntity<>(productService.saveAll(products, tempContent), HttpStatus.OK);
     }
 
+    @PutMapping("/")
+    public ResponseEntity<List<Product>> updateAll(@Valid @RequestBody List<Product> products, @RequestParam(name = "contentId") Long contentId){
+        Content tempContent = contentService.findById(contentId).orElseThrow(() -> new EntityNotFoundException("Content not found!"));
+        return new ResponseEntity<>(productService.saveAll(products, tempContent), HttpStatus.OK);
+    }
+
     @DeleteMapping
-    public ResponseEntity<Product> delete(@RequestBody Product product){
-        productService.delete(product);
+    public ResponseEntity<List<Product>> delete(@Valid @RequestBody List<Product> products){
+        productService.deleteAll(products);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

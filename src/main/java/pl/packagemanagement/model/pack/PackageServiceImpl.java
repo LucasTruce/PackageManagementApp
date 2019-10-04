@@ -2,6 +2,9 @@ package pl.packagemanagement.model.pack;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.packagestatus.PackageStatus;
@@ -35,8 +38,14 @@ public class PackageServiceImpl implements PackageService {
     }
 
     @Override
-    public List<Package> findByUsers(List<User> users) {
-        return packageRepository.findPackagesByUsers(users);
+    public Page<Package> findByUsers(List<User> users, int pageNumber, int pageSize, String orderBy, String direction) {
+        Page<Package> pagedPackage;
+        if(direction.equals(Sort.Direction.ASC.name()))
+            pagedPackage = packageRepository.findAllByUsers(users, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, orderBy)));
+        else
+            pagedPackage = packageRepository.findAllByUsers(users, PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, orderBy)));
+
+        return pagedPackage;
     }
 
     @Override
@@ -58,6 +67,11 @@ public class PackageServiceImpl implements PackageService {
         }
         else
             this.save(pack, user);
+        return packageRepository.save(pack);
+    }
+
+    @Override
+    public Package update(Package pack) {
         return packageRepository.save(pack);
     }
 }

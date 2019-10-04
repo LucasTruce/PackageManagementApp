@@ -51,4 +51,9 @@ public class RecipientController {
         recipientService.delete(recipient);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping
+    public ResponseEntity<Recipient> update(@Valid @RequestBody Recipient recipient) {
+        return new ResponseEntity<>(recipientService.save(recipient), HttpStatus.OK);
+    }
 }

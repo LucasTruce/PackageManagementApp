@@ -1,5 +1,6 @@
 package pl.packagemanagement.model.user;
 
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pl.packagemanagement.model.userdetails.UserDetails;
 
@@ -11,7 +12,7 @@ public interface UserService {
     User save(User user);
     User update(User user);
     Optional<User> findById(Long id);
-    List<User> findAll();
+    Page<User> findAll(int pageNumber, int pageSize, String orderBy, String direction);
     Optional<User> findByLoginOrEmail(String login, String email);
 
 }

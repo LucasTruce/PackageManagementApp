@@ -50,7 +50,7 @@ public class User {
     private UserDetails userDetails;
 
     //Paczki -> paczki_uzytkownikow
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "paczki_uzytkownikow",
             joinColumns = {@JoinColumn(name = "uzytkownicy_id", referencedColumnName = "id_uzytkownicy")},
             inverseJoinColumns = {@JoinColumn(name = "paczki_id", referencedColumnName = "id_paczki")}

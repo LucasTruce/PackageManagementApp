@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "towary")
-@JsonIgnoreProperties({})
+@JsonIgnoreProperties({"content"})
 @Data
 @NoArgsConstructor
 public class Product {
@@ -32,7 +32,7 @@ public class Product {
     @NotBlank
     private String comments;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "kody_id")
     private Code code;
 

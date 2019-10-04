@@ -1,6 +1,9 @@
 package pl.packagemanagement.model.warehouse;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +15,13 @@ public class WarehouseServiceImpl implements  WarehouseService{
     private final WarehouseRepository warehouseRepository;
 
     @Override
-    public List<Warehouse> findAll() {
-        return warehouseRepository.findAll();
+    public Page<Warehouse> findAll(int pageNumber, int pageSize, String orderBy, String direction) {
+        Page<Warehouse> pagedWarehouse;
+        if(direction.equals(Sort.Direction.ASC.name()))
+            pagedWarehouse = warehouseRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, orderBy)));
+        else
+            pagedWarehouse = warehouseRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, orderBy)));
+        return pagedWarehouse;
     }
 
     @Override

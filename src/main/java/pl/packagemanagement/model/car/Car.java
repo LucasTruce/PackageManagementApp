@@ -66,7 +66,7 @@ public class Car {
     @OneToMany(mappedBy = "car")
     private List<Package> packages;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "kody_id")
     private Code code;
 }

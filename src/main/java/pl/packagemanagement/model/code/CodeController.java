@@ -45,18 +45,6 @@ public class CodeController {
         ), HttpStatus.OK);
     }
 
-    @PostMapping("/{packId}") // codes/packId
-    public void saveWithPackage(@PathVariable(name = "packId") Long packId, @Valid @RequestBody Code code){
-        Package tempPack = packageService.findById(packId).orElseThrow(
-                () -> new EntityNotFoundException("package not found!")
-        );
-
-        tempPack.setCode(code);
-        code.setPack(tempPack);
-
-        codeService.save(code);
-    }
-
     @PostMapping // codes
     public void saveWithProducts(@Valid @RequestBody List<Code> codes) {
         for (Code code: codes) {
@@ -73,7 +61,7 @@ public class CodeController {
                                   @RequestParam(required = false) Long packId,
                                   @RequestParam(required = false) Long carId){
         if(packId != null) {
-            Package tempPack = packageService.findById(packId).orElseThrow(() -> new EntityNotFoundException("package not found!"));
+            Package tempPack = packageService.findById(packId).orElseThrow(() -> new EntityNotFoundException("Package not found!"));
             tempPack.setCode(code);
             code.setPack(tempPack);
             codeService.save(code);

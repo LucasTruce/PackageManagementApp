@@ -2,6 +2,7 @@ package pl.packagemanagement.model.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll(){
-        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+    public ResponseEntity<Page<User>> findAll(@RequestParam(defaultValue = "0") int pageNumber,
+                                              @RequestParam(defaultValue = "10") int pageSize,
+                                              @RequestParam(defaultValue = "id") String orderBy,
+                                              @RequestParam(defaultValue = "ASC") String direction){
+
+        return new ResponseEntity<>(userService.findAll(pageNumber, pageSize, orderBy, direction), HttpStatus.OK);
     }
 
     @GetMapping("/")    // users/?login=

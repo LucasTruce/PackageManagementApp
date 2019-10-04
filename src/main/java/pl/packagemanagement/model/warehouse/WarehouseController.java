@@ -2,6 +2,7 @@ package pl.packagemanagement.model.warehouse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,11 @@ public class WarehouseController {
     private final WarehouseService warehouseService;
 
     @GetMapping
-    public ResponseEntity<List<Warehouse>> findAll(){
-        return new ResponseEntity<>(warehouseService.findAll(), HttpStatus.OK);
+    public ResponseEntity<Page<Warehouse>> findAll(@RequestParam(defaultValue = "0") int pageNumber,
+                                                   @RequestParam(defaultValue = "10") int pageSize,
+                                                   @RequestParam(defaultValue = "id") String orderBy,
+                                                   @RequestParam(defaultValue = "ASC") String direction){
+        return new ResponseEntity<>(warehouseService.findAll(pageNumber, pageSize, orderBy, direction), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -38,9 +42,15 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouseService.save(warehouse), HttpStatus.OK);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Warehouse> delete(@RequestBody Warehouse warehouse){
-        warehouseService.delete(warehouse);
+    @DeleteMapping //warehouses?id=
+    public ResponseEntity<Warehouse> delete(@RequestParam(name = "id") Long id){
+        warehouseService.delete(warehouseService.findById(id).orElseThrow(() -> new EntityNotFoundException("Warehouse not found, id" + id)));
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<Warehouse> updateWarehouse(@Valid @RequestBody Warehouse warehouse) {
+        Warehouse tempWarehouse = warehouseService.findById(warehouse.getId()).orElseThrow(() -> new EntityNotFoundException("Warehouse not found"));
+        return new ResponseEntity<>(warehouseService.save(warehouse), HttpStatus.OK);
     }
 }

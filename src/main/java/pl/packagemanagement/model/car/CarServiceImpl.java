@@ -1,14 +1,12 @@
 package pl.packagemanagement.model.car;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import pl.packagemanagement.model.car.Car;
-import pl.packagemanagement.model.car.CarRepository;
-import pl.packagemanagement.model.car.CarService;
 import pl.packagemanagement.model.carstatus.CarStatus;
 import pl.packagemanagement.model.carstatus.CarStatusRepository;
-
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,8 +17,13 @@ public class CarServiceImpl implements CarService {
     private final CarStatusRepository carStatusRepository;
 
     @Override
-    public List<Car> findAll() {
-        return carRepository.findAll();
+    public Page<Car> findAll(int pageNumber, int pageSize, String orderBy, String direction) {
+        Page<Car> pagedCar;
+        if(direction.equals(Sort.Direction.ASC.name()))
+            pagedCar = carRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, orderBy)));
+        else
+            pagedCar = carRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, orderBy)));
+        return pagedCar;
     }
 
     @Override
