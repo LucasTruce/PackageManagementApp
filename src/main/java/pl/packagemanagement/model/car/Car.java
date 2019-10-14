@@ -10,7 +10,7 @@ import pl.packagemanagement.model.pack.Package;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
-//asfsddasdasdas safsd
+
 @Entity
 @Table(name = "samochody")
 @JsonIgnoreProperties({"packages"})

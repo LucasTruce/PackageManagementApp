@@ -43,4 +43,17 @@ public class Code {
     @OneToOne(mappedBy = "code")
     @Nullable
     private Product product;
+
+    public String toString() {
+        String string = "";
+        if(car != null)
+            string = " carId: " + car.getId();
+        else if(pack != null)
+            string = " packId: " + pack.getId();
+        else if(warehouse != null)
+            string = " warehouseId: " + warehouse.getId();
+        else if(product != null)
+            string = " productId: " + product.getId();
+        return "id: " + id + " filePath: " + filePath + string;
+    }
 }
