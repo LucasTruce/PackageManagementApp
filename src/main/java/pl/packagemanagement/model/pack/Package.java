@@ -3,6 +3,7 @@ package pl.packagemanagement.model.pack;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.packagemanagement.model.history.History;
 import pl.packagemanagement.model.user.User;
 import pl.packagemanagement.model.userdetails.UserDetails;
 import pl.packagemanagement.model.car.Car;
@@ -54,9 +55,6 @@ public class Package {
 
     //1:1
     //Status_paczki
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private PackageStatus packageStatus;
 
     @OneToOne
     @JoinColumn(name = "zawartosc_id")
@@ -78,6 +76,16 @@ public class Package {
     @ManyToOne
     @JoinColumn(name = "samochody_id")
     private Car car;
+
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private PackageStatus packageStatus;
+
+    //1:N
+
+    @OneToMany(mappedBy = "pack")
+    private List<History> histories = new ArrayList<>();
+
 
     //N:M
     //Uzytkownicy

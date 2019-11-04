@@ -46,14 +46,17 @@ public class Code {
 
     public String toString() {
         String string = "";
+        String variable = "";
         if(car != null)
-            string = " carId: " + car.getId();
+            variable = ",\"carId\":" + car.getId();
         else if(pack != null)
-            string = " packId: " + pack.getId();
+            variable = ",\"packId\":" + pack.getId();
         else if(warehouse != null)
-            string = " warehouseId: " + warehouse.getId();
+            variable = ",\"warehouseId\":" + warehouse.getId();
         else if(product != null)
-            string = " productId: " + product.getId();
-        return "id: " + id + " filePath: " + filePath + string;
+            variable = ",\"productId\":" + product.getId() + ",\"packId\":" + product.getContent().getPack().getId();
+
+        //return "id: " + id + " filePath: " + filePath + string;
+        return "{\"codeId\":" + id + variable + "}";
     }
 }

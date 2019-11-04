@@ -10,6 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.model.code.Code;
 import pl.packagemanagement.model.code.CodeService;
+import pl.packagemanagement.model.history.History;
+import pl.packagemanagement.model.history.HistoryService;
 import pl.packagemanagement.model.pack.Package;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.pack.PackageService;
@@ -19,8 +21,13 @@ import pl.packagemanagement.model.user.User;
 import pl.packagemanagement.model.user.UserService;
 
 import javax.validation.Valid;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping("packages")
@@ -30,6 +37,7 @@ public class PackageController {
 
     private final PackageService packageService;
     private final UserService userService;
+    private final HistoryService historyService;
 
     @GetMapping
     public ResponseEntity<List<Package>> findAllPackages() {
@@ -53,7 +61,7 @@ public class PackageController {
         return new ResponseEntity<>(packageService.findByUsers(users, pageNumber, pageSize, orderBy, direction), HttpStatus.OK);
     }
 
-    @GetMapping("/number/{packageNumber}") // packages/number/X
+    @GetMapping("/number/{packageNumber}") //packages/number/X
     public ResponseEntity<Package> findPackageByNumber(@PathVariable String packageNumber){
         return new ResponseEntity<>(packageService.findByNumber(packageNumber).orElseThrow(
                 () -> new EntityNotFoundException("Package not found, packageNumber: " + packageNumber)
@@ -77,6 +85,15 @@ public class PackageController {
 
     @PutMapping
     public ResponseEntity<Package> updatePackage(@Valid @RequestBody Package pack) {
+        Package tempPack = packageService.findById(pack.getId()).orElseThrow(() -> new EntityNotFoundException("Package not found"));
+        if(tempPack.getPackageStatus().getId() == 3)
+            pack.setDate(LocalDateTime.now());
+
+        if(tempPack.getPackageStatus().getId() != pack.getPackageStatus().getId()) {
+            History tempHistory = historyService.save(new History(null, "", LocalDateTime.now(ZoneId.of("Europe/Warsaw")), "", tempPack));
+            pack.getHistories().add(tempHistory);
+        }
+
         return new ResponseEntity<>(packageService.update(pack), HttpStatus.OK);
     }
 }

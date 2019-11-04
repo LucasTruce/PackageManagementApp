@@ -39,7 +39,7 @@ public class UserDetails {
 
     @Column(name = "telefon", length = 13)
     @NotBlank(message = "Numer telefonu nie może być pusty!")
-    @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})", message = "Podaj numer 9 cyfrowy lub z formatem +48") //+48123456789 oraz 123456789
+    @Pattern(regexp = "(\\d]{9})|(\\+[\\d]{11})", message = "Podaj numer 9 cyfrowy lub z formatem +48") //+48123456789 oraz 123456789
     private String phoneNumber;
 
     @Column(name = "ulica", length = 72)
