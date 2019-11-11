@@ -45,7 +45,6 @@ public class Code {
     private Product product;
 
     public String toString() {
-        String string = "";
         String variable = "";
         if(car != null)
             variable = ",\"carId\":" + car.getId();
@@ -54,9 +53,8 @@ public class Code {
         else if(warehouse != null)
             variable = ",\"warehouseId\":" + warehouse.getId();
         else if(product != null)
-            variable = ",\"productId\":" + product.getId() + ",\"packId\":" + product.getContent().getPack().getId();
+            variable = ",\"productId\":" + product.getId() + ",\"packNumber\":" + product.getContent().getPack().getPackageNumber(); //mozna dodac date kompletacji towarow (getContent.getDate()
 
-        //return "id: " + id + " filePath: " + filePath + string;
         return "{\"codeId\":" + id + variable + "}";
     }
 }
