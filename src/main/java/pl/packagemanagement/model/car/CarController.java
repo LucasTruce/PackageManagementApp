@@ -47,6 +47,6 @@ public class CarController {
     @PutMapping
     public ResponseEntity<Car> updateCar(@Valid @RequestBody Car car) {
         Car tempCar = carService.findById(car.getId()).orElseThrow(() -> new EntityNotFoundException("Car not found"));
-        return new ResponseEntity<>(carService.save(car), HttpStatus.OK);
+        return new ResponseEntity<>(carService.update(car), HttpStatus.OK);
     }
 }

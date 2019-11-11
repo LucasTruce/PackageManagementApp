@@ -11,4 +11,5 @@ public interface CarService {
     Optional<Car> findById(Long id);
     Car save(Car car);
     void delete(Car car);
+    Car update(Car car);
 }
