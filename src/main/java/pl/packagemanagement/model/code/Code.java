@@ -44,6 +44,9 @@ public class Code {
     @Nullable
     private Product product;
 
+    public Code(String filePath){
+        this.filePath = filePath;
+    }
     public String toString() {
         String variable = "";
         if(car != null)

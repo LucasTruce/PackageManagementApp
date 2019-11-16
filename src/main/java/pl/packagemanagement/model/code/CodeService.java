@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface CodeService {
     List<Code> findAll();
     Optional<Code> findById(Long id);
-    void save(Code code);
+    Code save(Code code);
     void saveAll(List<Code> codes);
     void delete(Code code);
 }

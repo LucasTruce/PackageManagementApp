@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.packagemanagement.exception.EntityNotFoundException;
+import pl.packagemanagement.model.code.Code;
+import pl.packagemanagement.model.code.CodeRepository;
 import pl.packagemanagement.model.packagestatus.PackageStatus;
 import pl.packagemanagement.model.packagestatus.PackageStatusService;
 import pl.packagemanagement.model.user.User;
@@ -20,6 +22,7 @@ public class PackageServiceImpl implements PackageService {
 
     private final PackageRepository packageRepository;
     private final PackageStatusService packageStatusService;
+    private final CodeRepository codeRepository;
 
 
     @Override
@@ -58,12 +61,15 @@ public class PackageServiceImpl implements PackageService {
     public Package save(Package pack, User user) {
         String generatedString = RandomStringUtils.random(13, false, true);
         if(packageRepository.findByPackageNumber(generatedString).isEmpty()) {
+            pack.getCode().setFilePath(generatedString);
+            pack.setCode(codeRepository.save(pack.getCode()));
             PackageStatus packageStatus = packageStatusService.findById(3l).get();
             packageStatus.getPackages().add(pack);
             pack.setPackageStatus(packageStatus);
             pack.setPackageNumber(generatedString);
             pack.getUsers().add(user);
             user.getPackages().add(pack);
+
         }
         else
             this.save(pack, user);

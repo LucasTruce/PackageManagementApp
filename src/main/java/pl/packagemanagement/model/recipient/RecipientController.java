@@ -21,7 +21,6 @@ import java.util.List;
 public class RecipientController {
 
     private final RecipientService recipientService;
-    private final PackageService packageService;
 
 
     @GetMapping
@@ -36,13 +35,8 @@ public class RecipientController {
         ), HttpStatus.OK);
     }
 
-    @PostMapping    //recipients/?packId=
-    public ResponseEntity<Recipient> save(@RequestParam(name = "packId") Long packId, @Valid @RequestBody Recipient recipient){
-        Package pack = packageService.findById(packId).orElseThrow(
-                () -> new EntityNotFoundException("Package not found, id: " + packId)
-        );
-        recipient.getPackages().add(pack);
-        pack.setRecipient(recipient);
+    @PostMapping
+    public ResponseEntity<Recipient> save(@Valid @RequestBody Recipient recipient){
         return new ResponseEntity<>(recipientService.save(recipient), HttpStatus.OK);
     }
 

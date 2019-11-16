@@ -20,8 +20,6 @@ import java.util.List;
 @CrossOrigin
 public class ProductController {
     private final ProductService productService;
-    private final ContentService contentService;
-
 
     @GetMapping
     public ResponseEntity<List<Product>> findAll(){
@@ -30,21 +28,17 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> findById(@PathVariable Long id){
-        return new ResponseEntity<>(productService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Product not found, id: " + id)
-        ), HttpStatus.OK);
+        return new ResponseEntity<>(productService.findById(id).orElseThrow(() -> new EntityNotFoundException("Product not found, id: " + id)), HttpStatus.OK);
     }
 
-    @PostMapping("/") // products/?contentId=
-    public ResponseEntity<List<Product>> saveAll(@Valid @RequestBody List<Product> products, @RequestParam(name = "contentId") Long contentId){
-        Content tempContent = contentService.findById(contentId).orElseThrow(() -> new EntityNotFoundException("Content not found!"));
-        return new ResponseEntity<>(productService.saveAll(products, tempContent), HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<List<Product>> saveAll(@Valid @RequestBody List<Product> products){
+        return new ResponseEntity<>(productService.saveAll(products), HttpStatus.OK);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<List<Product>> updateAll(@Valid @RequestBody List<Product> products, @RequestParam(name = "contentId") Long contentId){
-        Content tempContent = contentService.findById(contentId).orElseThrow(() -> new EntityNotFoundException("Content not found!"));
-        return new ResponseEntity<>(productService.saveAll(products, tempContent), HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<List<Product>> updateAll(@Valid @RequestBody List<Product> products){
+        return new ResponseEntity<>(productService.saveAll(products), HttpStatus.OK);
     }
 
     @DeleteMapping

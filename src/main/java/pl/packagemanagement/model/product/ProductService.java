@@ -10,6 +10,6 @@ public interface ProductService {
     List<Product> findAll();
     Optional<Product> findById(Long id);
     Product save(Product product);
-    List<Product> saveAll(List<Product> products, Content tempContent);
+    List<Product> saveAll(List<Product> products);
     void deleteAll(List<Product> products);
 }

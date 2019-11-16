@@ -19,7 +19,6 @@ import java.util.List;
 @CrossOrigin
 public class SenderController {
     private final SenderService senderService;
-    private final PackageService packageService;
 
     @GetMapping
     public ResponseEntity<List<Sender>> findAll(){
@@ -34,12 +33,7 @@ public class SenderController {
     }
 
     @PostMapping
-    public  ResponseEntity<Sender> save(@RequestParam(name = "packId") Long packId, @Valid @RequestBody Sender sender){
-        Package pack = packageService.findById(packId).orElseThrow(
-                () -> new EntityNotFoundException("Package not found, id: " + packId)
-        );
-        sender.getPackages().add(pack);
-        pack.setSender(sender);
+    public  ResponseEntity<Sender> save(@Valid @RequestBody Sender sender){
         return new ResponseEntity<>(senderService.save(sender), HttpStatus.OK);
     }
 

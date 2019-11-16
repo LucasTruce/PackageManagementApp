@@ -16,9 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin
 public class ContentController {
-
     private final ContentService contentService;
-    private final PackageService packageService;
 
     @GetMapping
     public ResponseEntity<List<Content>> findAll(){
@@ -33,10 +31,7 @@ public class ContentController {
     }
 
     @PostMapping
-    public ResponseEntity<Content> save(@Valid  @RequestBody Content content, @RequestParam(name = "packId") Long packId){
-        Package tempPack = packageService.findById(packId).orElseThrow( () -> new EntityNotFoundException("Package not found, id: " + packId));
-        content.setPack(tempPack);
-        tempPack.setContent(content);
+    public ResponseEntity<Content> save(@Valid  @RequestBody Content content){
         return new ResponseEntity<>(contentService.save(content), HttpStatus.OK);
     }
 
