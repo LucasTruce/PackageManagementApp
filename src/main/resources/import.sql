@@ -1,5 +1,5 @@
 INSERT INTO `role` (`id_role`, `name`) VALUES ('1', 'ROLE_USER'), ('2', 'ROLE_WORKER'), ('3', 'ROLE_ADMIN');
-INSERT INTO `role_uzytkownikow` (`uzytkownicy_id`, `role_id`) VALUES ('1', '3'), ('2', '1');
+INSERT INTO `role_uzytkownikow` (`uzytkownicy_id`, `role_id`) VALUES ('1', '3'), ('2', '1'), ('1', '2');
 INSERT INTO `uzytkownicy_informacje` (`id_uzytkownicy_info`, `miasto`, `nazwisko`, `imie`, `telefon`, `kod_pocztowy`, `ulica`, `uzytkownik_id`) VALUES (NULL, 'Lublin', 'Kowalski', 'Jan', '+48123456789', '20-218', 'Organowa', '1'), (NULL, 'Lublin', 'Nowak', 'Tomasz', '123456789', '20-111', 'Lubomelska', '2');
 INSERT INTO `uzytkownicy` (`id_uzytkownicy`, `email`, `login`, `haslo`) VALUES ('1', 'jan.kowalski@gmail.com', 'jan', '$2a$10$/fajymyED6f0syj0CWdm8eqCaFCmDEBb7vPi4KYdgfWyFewwCPp0e'), ('2', 'tomasz.nowak@gmail.com', 'tomasz', '$2a$10$jIkp3wsonyBxGdH.uYjF.uXKHg2TW/xtJ39Kn4j6NB3gpJi6wnLzW');
 INSERT INTO `status_paczki` (`id_status`, `opis`, `nazwa`) VALUES ('1', 'W dostawie', 'W dostawie'), ('2', 'W magazynie', 'W magazynie'), ('3', 'W oczekiwaniu na kuriera', 'W oczekiwaniu na kuriera'), ('4', 'W drodze do magazynu', 'W drodze do magazynu'), ('5', 'Paczka dostarczona', 'Dostarczono');

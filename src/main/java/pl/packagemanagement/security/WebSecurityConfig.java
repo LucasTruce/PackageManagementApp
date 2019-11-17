@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/warehouses").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/cars").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/packages/number/{packageNumber}").permitAll()
-                .antMatchers("/packages", "/senders", "/recipients", "/categories", "products").hasAnyRole("ADMIN", "USER", "WORKER")
+                .antMatchers("/packages", "/senders", "/recipients", "/categories", "products", "/content").hasAnyRole("ADMIN", "USER", "WORKER")
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

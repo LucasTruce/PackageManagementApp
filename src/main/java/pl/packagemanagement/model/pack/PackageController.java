@@ -3,10 +3,13 @@ package pl.packagemanagement.model.pack;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pl.packagemanagement.model.code.Code;
 import pl.packagemanagement.model.code.CodeService;
@@ -19,6 +22,7 @@ import pl.packagemanagement.model.packagestatus.PackageStatus;
 import pl.packagemanagement.model.packagestatus.PackageStatusService;
 import pl.packagemanagement.model.user.User;
 import pl.packagemanagement.model.user.UserService;
+import pl.packagemanagement.security.JwtTokenProvider;
 
 import javax.validation.Valid;
 import java.time.Instant;
@@ -28,6 +32,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("packages")
@@ -45,8 +50,18 @@ public class PackageController {
     }
 
    @GetMapping("/{id}")
-   public ResponseEntity<Package> findById(@PathVariable Long id){
-        return new ResponseEntity<>(packageService.findById(id).orElseThrow(() -> new EntityNotFoundException("Package not found, id: " + id)), HttpStatus.OK);
+   public ResponseEntity<Package> findById(@AuthenticationPrincipal UserDetails user, @PathVariable Long id){
+        Package pack = packageService.findById(id).orElseThrow(() -> new EntityNotFoundException("Package not found, id: " + id));
+        boolean role = false;
+        for(Object product : user.getAuthorities()){
+            if(product.toString().equals("ROLE_ADMIN") || product.toString().equals("ROLE_WORKER")){
+           role = true;
+       }
+   }
+        if(pack.getUsers().get(0).getLogin().equals(user.getUsername()) || pack.getUsers().get(0).getEmail().equals(user.getUsername()) || role)
+            return new ResponseEntity<>(pack, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/") // packages/?login=
@@ -85,14 +100,6 @@ public class PackageController {
 
     @PutMapping
     public ResponseEntity<Package> updatePackage(@Valid @RequestBody Package pack) {
-        Package tempPack = packageService.findById(pack.getId()).orElseThrow(() -> new EntityNotFoundException("Package not found"));
-        if(tempPack.getPackageStatus().getId() == 3)
-            pack.setDate(LocalDateTime.now());
-
-        if(tempPack.getPackageStatus().getId() != pack.getPackageStatus().getId()) {
-            History tempHistory = historyService.save(new History(null, "", LocalDateTime.now(ZoneId.of("Europe/Warsaw")), "", tempPack));
-            pack.getHistories().add(tempHistory);
-        }
 
         return new ResponseEntity<>(packageService.update(pack), HttpStatus.OK);
     }

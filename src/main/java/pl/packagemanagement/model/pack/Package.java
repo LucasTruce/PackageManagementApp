@@ -56,7 +56,7 @@ public class Package {
     //1:1
     //Status_paczki
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "zawartosc_id")
     private Content content;
 

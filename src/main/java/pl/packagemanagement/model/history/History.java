@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.jni.Local;
+import org.springframework.lang.Nullable;
 import pl.packagemanagement.model.pack.Package;
 
 import javax.persistence.*;
