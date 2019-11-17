@@ -92,7 +92,7 @@ public class PackageServiceImpl implements PackageService {
         PackageStatus packageStatus = packageStatusRepository.findById(pack.getPackageStatus().getId()).get();
         History tempHistory;
         if(tempPack.getPackageStatus().getId() != pack.getPackageStatus().getId()) {
-            if(pack.getWarehouses().get(0) != null)
+            if(pack.getWarehouses().size() > 0)
                 tempHistory = historyRepository.save(new History(null, packageStatus.getName(), LocalDateTime.now(ZoneId.of("Europe/Warsaw")), pack.getWarehouses().get(0).getCity(), tempPack));
             else{
                 tempHistory = historyRepository.save(new History(null, packageStatus.getName(), LocalDateTime.now(ZoneId.of("Europe/Warsaw")), "U nadawcy", tempPack));
