@@ -143,7 +143,7 @@ public class PackageServiceImpl implements PackageService {
         Font normalFont = new Font(bf, 12, Font.NORMAL); //czcionka normalna
 
         File dir = new File(filePath);
-        dir.mkdir();
+        dir.mkdirs();
         FileOutputStream newFile = new FileOutputStream(finalPath);
         PdfWriter writer = PdfWriter.getInstance(document, newFile);
         document.open(); //otwarcie dokumentu
