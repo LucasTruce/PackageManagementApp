@@ -88,14 +88,7 @@ public class PackageServiceImpl implements PackageService {
         History history = historyRepository.save(new History(null, "W oczekiwaniu na kuriera", LocalDateTime.now(ZoneId.of("Europe/Warsaw")), "U nadawcy", pack));
         pack.getHistories().add(history); //dodanie nowej historii do paczki
 
-        try {
-            String fileName = pack.getUsers().get(0).getLogin() + "-" + pack.getPackageNumber() + ".pdf";
-            String path = "src/main/resources/documents/" + pack.getUsers().get(0).getLogin();
-            String finalPath = path + "/" + fileName;
-            createDocument(pack, path, finalPath); //tworzenie dokumentu pdf
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        createFile(pack);
 
         return pack; //zwracamy paczke
     }
@@ -106,6 +99,9 @@ public class PackageServiceImpl implements PackageService {
         Package tempPack = packageRepository.findById(pack.getId()).orElseThrow(() -> new EntityNotFoundException("Package not found"));
         PackageStatus packageStatus = packageStatusRepository.findById(pack.getPackageStatus().getId()).get();
         History tempHistory;
+
+        createFile(pack);
+
         if(tempPack.getPackageStatus().getId() != pack.getPackageStatus().getId()) {
             if(pack.getWarehouses().size() > 0)
                 tempHistory = historyRepository.save(new History(null, packageStatus.getName(), LocalDateTime.now(ZoneId.of("Europe/Warsaw")), pack.getWarehouses().get(0).getCity(), tempPack));
@@ -132,6 +128,17 @@ public class PackageServiceImpl implements PackageService {
         user.getPackages().add(pack);
 
         return pack;
+    }
+
+    private void createFile(Package pack){
+        try {
+            String fileName = pack.getUsers().get(0).getLogin() + "-" + pack.getPackageNumber() + ".pdf";
+            String path = "src/main/resources/documents/" + pack.getUsers().get(0).getLogin();
+            String finalPath = path + "/" + fileName;
+            createDocument(pack, path, finalPath); //tworzenie dokumentu pdf
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void createDocument(Package pack, String filePath, String finalPath) throws Exception {
@@ -164,6 +171,11 @@ public class PackageServiceImpl implements PackageService {
         //ustawienia szerokosci kolumn dla danych paczki
         float[] columnWidths = {1.2f, 1.5f};
         packageTable.setWidths(columnWidths);
+
+        PdfPTable codeTable = new PdfPTable(1);
+        codeTable.setSpacingBefore(10f);
+        //codeTable.setSpacingAfter(10f);
+        codeTable.setHorizontalAlignment(Element.ALIGN_CENTER);
 
         PdfPTable senderTable = new PdfPTable(2);
         senderTable.setWidthPercentage(40);
@@ -214,6 +226,12 @@ public class PackageServiceImpl implements PackageService {
         packageComments.setColspan(2);
         packageComments.setPaddingLeft(10);
         packageComments.setPaddingRight(10);
+
+        //konfiguracja tabeli z kodem
+        PdfPCell codeTitle = new PdfPCell(new Paragraph("Kod QR paczki", boldFont16));
+        codeTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
+        codeTitle.setBorder(Rectangle.NO_BORDER);
+        //codeTitle.setPaddingBottom(25);
 
 
         //konfiguracja tabeli nadawcy
@@ -284,6 +302,7 @@ public class PackageServiceImpl implements PackageService {
 
         //stworzenie obrazka QR kod
         PdfPCell cell3 = new PdfPCell();
+        cell3.setBorder(Rectangle.NO_BORDER);
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(pack.getCode().toString(), BarcodeFormat.QR_CODE, 256, 256);
@@ -291,7 +310,7 @@ public class PackageServiceImpl implements PackageService {
         MatrixToImageWriter.writeToStream(bitMatrix, "png", pngOutputStream);
         byte[] pngData = pngOutputStream.toByteArray();
         Image image = Image.getInstance(pngData);
-        cell3.setImage(image); //przypisanie obrazka do komórki tabeli
+        cell3.setImage(image);//przypisanie obrazka do komórki tabeli
 
         //dodanie danych do tabeli z Paczka
         packageTable.addCell(titleHeader);
@@ -301,6 +320,9 @@ public class PackageServiceImpl implements PackageService {
         packageTable.addCell(packageSize);
         packageTable.addCell(packageCommentsHeader);
         packageTable.addCell(packageComments);
+
+        codeTable.addCell(codeTitle);
+        codeTable.addCell(cell3);
 
         //dodanie danych do tabeli z nadawca
         senderTable.addCell(titleSenderHeader);
@@ -320,9 +342,11 @@ public class PackageServiceImpl implements PackageService {
         recipientTable.addCell(receiverAddressHeader);
         recipientTable.addCell(receiverAddress);
 
+
+
         //dodanie tabeli oraz kodu QR do wiekszej tabeli
         AllTable.addCell(packageTable);
-        AllTable.addCell(cell3);
+        AllTable.addCell(codeTable);
         AllTable.addCell(senderTable);
         AllTable.addCell(recipientTable);
 
