@@ -64,8 +64,6 @@ public class CodeController {
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "png", pngOutputStream);
         byte[] pngData = pngOutputStream.toByteArray();
-        //HttpHeaders headers = new HttpHeaders();
-        //headers.setContentType(MediaType.IMAGE_PNG);
         String encodeImage = Base64.getEncoder().encodeToString(pngData);
         Map<String, String> jsonMap = new HashMap<>();
         jsonMap.put("content", encodeImage);

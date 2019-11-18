@@ -48,12 +48,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected  void configure(HttpSecurity httpSecurity) throws Exception{
+        httpSecurity.headers().frameOptions().disable();
         httpSecurity.
                 cors().and().
                 csrf().disable()
                 .authorizeRequests().antMatchers("/authenticate").permitAll() //logowanie uzytkownika
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/register").permitAll() //dostep nieautoryzowany podczas rejestracji
+                .antMatchers("/register", "/packages/raport/{id}").permitAll() //dostep nieautoryzowany podczas rejestracji
                 .antMatchers("/userdetails").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                 .antMatchers("/users/{userId}").hasRole("ADMIN")  //get /users/x with parameters

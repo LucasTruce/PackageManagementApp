@@ -1,38 +1,27 @@
 package pl.packagemanagement.model.pack;
 
+
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
+
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import pl.packagemanagement.model.code.Code;
-import pl.packagemanagement.model.code.CodeService;
-import pl.packagemanagement.model.history.History;
 import pl.packagemanagement.model.history.HistoryService;
-import pl.packagemanagement.model.pack.Package;
 import pl.packagemanagement.exception.EntityNotFoundException;
-import pl.packagemanagement.model.pack.PackageService;
-import pl.packagemanagement.model.packagestatus.PackageStatus;
-import pl.packagemanagement.model.packagestatus.PackageStatusService;
 import pl.packagemanagement.model.user.User;
 import pl.packagemanagement.model.user.UserService;
-import pl.packagemanagement.security.JwtTokenProvider;
 
 import javax.validation.Valid;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("packages")
@@ -90,10 +79,11 @@ public class PackageController {
     }
 
     @PostMapping
-    public ResponseEntity<Package> save(@RequestParam(name = "login") String login, @Valid @RequestBody Package pack){
+    public ResponseEntity<Package> save(@RequestParam(name = "login") String login, @Valid @RequestBody Package pack) {
         User user = userService.findByLoginOrEmail(login, login).orElseThrow(
                 () -> new EntityNotFoundException("User not found, id: " + login)
         );
+
 
         return new ResponseEntity<>(packageService.save(pack, user), HttpStatus.OK);
     }
@@ -103,4 +93,25 @@ public class PackageController {
 
         return new ResponseEntity<>(packageService.update(pack), HttpStatus.OK);
     }
+
+    @GetMapping("/raport/{id}")
+    public ResponseEntity<Resource> getRaport(@PathVariable("id") Long id) throws Exception {
+        Package pack = packageService.findById(id).orElseThrow(() -> new EntityNotFoundException("package not found"));
+
+        String fileName = pack.getUsers().get(0).getLogin() + "-" + pack.getPackageNumber() + ".pdf";
+        String path = "src/main/resources/documents/" + pack.getUsers().get(0).getLogin();
+        String finalPath = path + "/" + fileName;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(finalPath));
+
+        //headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);   //jesli dodamy tą linijke to po otrzymaniu żądania włączy się pobieranie w przeglądarce
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
+
 }
