@@ -20,7 +20,9 @@ import pl.packagemanagement.model.user.UserService;
 
 import javax.validation.Valid;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -94,8 +96,8 @@ public class PackageController {
         return new ResponseEntity<>(packageService.update(pack), HttpStatus.OK);
     }
 
-    @GetMapping("/raport/{id}")
-    public ResponseEntity<Resource> getRaport(@PathVariable("id") Long id) throws Exception {
+    @GetMapping("/{id}/raport")
+    public ResponseEntity<Resource> getRaport(@PathVariable("id") Long id){
         Package pack = packageService.findById(id).orElseThrow(() -> new EntityNotFoundException("package not found"));
 
         String fileName = pack.getUsers().get(0).getLogin() + "-" + pack.getPackageNumber() + ".pdf";
@@ -105,10 +107,16 @@ public class PackageController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
 
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(finalPath));
+        FileInputStream file;
+        try {
+            file = new FileInputStream(finalPath);
+        }catch (FileNotFoundException e){
+            throw new EntityNotFoundException("file not found");
+        }
+        InputStreamResource resource = new InputStreamResource(file);
 
-        //headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);   //jesli dodamy tą linijke to po otrzymaniu żądania włączy się pobieranie w przeglądarce
-
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, fileName);   //jesli dodamy tą linijke to po otrzymaniu żądania włączy się pobieranie w przeglądarce
+        headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(resource);

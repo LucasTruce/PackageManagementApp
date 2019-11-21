@@ -54,12 +54,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 csrf().disable()
                 .authorizeRequests().antMatchers("/authenticate").permitAll() //logowanie uzytkownika
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/register", "/packages/raport/{id}").permitAll() //dostep nieautoryzowany podczas rejestracji
+                .antMatchers("/register").permitAll() //dostep nieautoryzowany podczas rejestracji
                 .antMatchers("/userdetails").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
                 .antMatchers("/users/{userId}").hasRole("ADMIN")  //get /users/x with parameters
                 .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN", "USER", "WORKER")
                 .antMatchers(HttpMethod.GET, "/warehouses").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/packages/{id}/raport", "/cars/{id}/document", "/warehouses/{id}/document").hasAnyRole("USER", "ADMIN", "WORKER")
                 .antMatchers(HttpMethod.GET, "/cars").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/packages/number/{packageNumber}").permitAll()
                 .antMatchers("/packages", "/senders", "/recipients", "/categories", "products", "/content").hasAnyRole("ADMIN", "USER", "WORKER")

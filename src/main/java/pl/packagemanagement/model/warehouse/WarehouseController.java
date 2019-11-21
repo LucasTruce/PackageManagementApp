@@ -2,15 +2,22 @@ package pl.packagemanagement.model.warehouse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.packagemanagement.model.car.Car;
 import pl.packagemanagement.model.warehouse.Warehouse;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.warehouse.WarehouseService;
 
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -34,6 +41,32 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouseService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Warehouse not found, id: " + id)
         ), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/document")
+    public ResponseEntity<Resource> getPdf(@PathVariable("id") Long id){
+        Warehouse warehouse = warehouseService.findById(id).orElseThrow(() -> new EntityNotFoundException("Warehouse not found"));
+
+        String fileName = warehouse.getCity() + "-" + warehouse.getStreet() +  ".pdf";
+        String path = "src/main/resources/warehouses";
+        String finalPath = path + "/" + fileName;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        FileInputStream file;
+        try {
+            file = new FileInputStream(finalPath);
+        }catch (FileNotFoundException e){
+            throw new EntityNotFoundException("file not found");
+        }
+        InputStreamResource resource = new InputStreamResource(file);
+
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, fileName);   //jesli dodamy tą linijke to po otrzymaniu żądania włączy się pobieranie w przeglądarce
+        headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
     }
 
     @PostMapping

@@ -13,6 +13,7 @@ import pl.packagemanagement.exception.EntityNotFoundException;
 
 import javax.validation.Valid;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,7 @@ public class CarController {
     }
 
     @GetMapping("/{id}/document")
-    public ResponseEntity<Resource> getPdf(@PathVariable("id") Long id) throws Exception{
+    public ResponseEntity<Resource> getPdf(@PathVariable("id") Long id){
         Car car = carService.findById(id).orElseThrow(() -> new EntityNotFoundException("package not found"));
 
         String fileName = car.getBrand() + "-" + car.getLicensePlate() + ".pdf";
@@ -49,9 +50,16 @@ public class CarController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
 
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(finalPath));
+        FileInputStream file;
+        try {
+            file = new FileInputStream(finalPath);
+        }catch (FileNotFoundException e){
+            throw new EntityNotFoundException("file not found");
+        }
+        InputStreamResource resource = new InputStreamResource(file);
 
-        //headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);   //jesli dodamy tą linijke to po otrzymaniu żądania włączy się pobieranie w przeglądarce
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, fileName);   //jesli dodamy tą linijke to po otrzymaniu żądania włączy się pobieranie w przeglądarce
+        headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
 
         return ResponseEntity.ok()
                 .headers(headers)
