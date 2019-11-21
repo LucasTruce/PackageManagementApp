@@ -2,7 +2,9 @@ package pl.packagemanagement.model.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import pl.packagemanagement.model.category.Category;
 import pl.packagemanagement.model.code.Code;
 import pl.packagemanagement.model.content.Content;
@@ -43,5 +45,4 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "zawartosc_id")
     private Content content;
-
 }

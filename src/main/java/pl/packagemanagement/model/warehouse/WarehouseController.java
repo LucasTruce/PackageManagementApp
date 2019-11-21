@@ -51,6 +51,6 @@ public class WarehouseController {
     @PutMapping
     public ResponseEntity<Warehouse> updateWarehouse(@Valid @RequestBody Warehouse warehouse) {
         Warehouse tempWarehouse = warehouseService.findById(warehouse.getId()).orElseThrow(() -> new EntityNotFoundException("Warehouse not found"));
-        return new ResponseEntity<>(warehouseService.save(warehouse), HttpStatus.OK);
+        return new ResponseEntity<>(warehouseService.update(warehouse), HttpStatus.OK);
     }
 }

@@ -11,4 +11,5 @@ public interface WarehouseService {
     Optional<Warehouse> findById(Long id);
     Warehouse save(Warehouse warehouse);
     void delete(Warehouse warehouse);
+    Warehouse update(Warehouse warehouse);
 }

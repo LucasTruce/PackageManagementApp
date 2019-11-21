@@ -11,6 +11,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,7 @@ import pl.packagemanagement.model.history.History;
 import pl.packagemanagement.model.history.HistoryRepository;
 import pl.packagemanagement.model.packagestatus.PackageStatus;
 import pl.packagemanagement.model.packagestatus.PackageStatusRepository;
+import pl.packagemanagement.model.product.Product;
 import pl.packagemanagement.model.user.User;
 
 import java.io.ByteArrayOutputStream;
@@ -141,7 +143,15 @@ public class PackageServiceImpl implements PackageService {
         }
     }
 
-    private static void createDocument(Package pack, String filePath, String finalPath) throws Exception {
+    private static byte[] getQRBytes(Code code, int width, int height) throws Exception{
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(code.toString(), BarcodeFormat.QR_CODE,  width, height);
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "png", pngOutputStream);
+        return pngOutputStream.toByteArray();
+    }
+
+    private void createDocument(Package pack, String filePath, String finalPath) throws Exception {
         Document document = new Document();
 
         BaseFont bf = BaseFont.createFont("FreeSans.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
@@ -157,11 +167,36 @@ public class PackageServiceImpl implements PackageService {
 
 
         //tabela trzymajaca tabele z danymi paczki i kod QR
-        PdfPTable AllTable = new PdfPTable(2);
-        AllTable.setWidthPercentage(100);
-        AllTable.setSpacingBefore(10f);
-        AllTable.setSpacingAfter(10f);
+        PdfPTable allTable = new PdfPTable(2);
+        allTable.setWidthPercentage(100);
+        allTable.setSpacingBefore(10f);
+        allTable.setSpacingAfter(25f);
 
+        createPackageTable(allTable, pack, boldFont, boldFont16, normalFont); //tworzenie tabeli z informacja o paczce, nadawcy odbiorcy
+        document.add(allTable);
+
+
+        if(pack.getContent() != null) {
+            CustomDashedLineSeparator separator = new CustomDashedLineSeparator();
+            separator.setDash(10);
+            separator.setGap(7);
+            separator.setLineWidth(3);
+            Chunk linebreak = new Chunk(separator);
+
+            document.add(linebreak);
+
+            PdfPTable productsTable = createProductsTable(pack, boldFont, normalFont); //tworzenie tabeli z produktami
+
+            document.add(productsTable);
+        }
+
+
+        document.close(); //zamkniecie dokumentu
+        writer.close();
+    }
+
+
+    private PdfPTable createPackageTable(PdfPTable allTable, Package pack, Font boldFont, Font boldFont16, Font normalFont) throws Exception{
         //tabela trzymajaca dane paczki
         PdfPTable packageTable = new PdfPTable(2);
         packageTable.setWidthPercentage(40);
@@ -304,11 +339,8 @@ public class PackageServiceImpl implements PackageService {
         PdfPCell cell3 = new PdfPCell();
         cell3.setBorder(Rectangle.NO_BORDER);
 
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(pack.getCode().toString(), BarcodeFormat.QR_CODE, 256, 256);
-        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-        MatrixToImageWriter.writeToStream(bitMatrix, "png", pngOutputStream);
-        byte[] pngData = pngOutputStream.toByteArray();
+
+        byte[] pngData = getQRBytes(pack.getCode(), 256, 256);
         Image image = Image.getInstance(pngData);
         cell3.setImage(image);//przypisanie obrazka do komórki tabeli
 
@@ -342,18 +374,87 @@ public class PackageServiceImpl implements PackageService {
         recipientTable.addCell(receiverAddressHeader);
         recipientTable.addCell(receiverAddress);
 
-
-
         //dodanie tabeli oraz kodu QR do wiekszej tabeli
-        AllTable.addCell(packageTable);
-        AllTable.addCell(codeTable);
-        AllTable.addCell(senderTable);
-        AllTable.addCell(recipientTable);
+        allTable.addCell(packageTable);
+        allTable.addCell(codeTable);
+        allTable.addCell(senderTable);
+        allTable.addCell(recipientTable);
 
-        document.add(AllTable);
-
-
-        document.close(); //zamkniecie dokumentu
-        writer.close();
+        return allTable;
     }
+
+    private PdfPTable createProductsTable(Package pack, Font boldFont, Font normalFont) throws Exception {
+
+        PdfPTable productsTable = new PdfPTable(4);
+        productsTable.setWidthPercentage(100);
+        productsTable.setSpacingBefore(25f);
+        productsTable.setSpacingAfter(10f);
+        productsTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+        int i = 0;
+        for(Product product : pack.getContent().getProducts()){
+            i++;
+            PdfPTable productNameTable = new PdfPTable(2);
+            productNameTable.setSpacingBefore(10f);
+            productNameTable.setSpacingAfter(10f);
+            productNameTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+            PdfPCell productNameTitle = new PdfPCell(new Paragraph("Nazwa:", boldFont));
+            productNameTitle.setColspan(2);
+            productNameTitle.setPaddingLeft(10);
+            productNameTitle.setPaddingRight(10);
+            productNameTitle.setBorder(Rectangle.NO_BORDER);
+
+            PdfPCell productName = new PdfPCell(new Paragraph(product.getName(), normalFont));
+            productName.setPaddingLeft(10);
+            productName.setPaddingRight(10);
+            productName.setBorder(Rectangle.NO_BORDER);
+            productName.setColspan(2);
+
+            PdfPCell productWeightTitle = new PdfPCell(new Paragraph("Waga[kg]:", boldFont));
+            productWeightTitle.setColspan(2);
+            productWeightTitle.setPaddingLeft(10);
+            productWeightTitle.setPaddingRight(10);
+            productWeightTitle.setBorder(Rectangle.NO_BORDER);
+
+            PdfPCell productWeightName = new PdfPCell(new Paragraph(product.getWeight() + "", normalFont));
+            productWeightName.setColspan(2);
+            productWeightName.setPaddingLeft(10);
+            productWeightName.setPaddingRight(10);
+            productWeightName.setBorder(Rectangle.NO_BORDER);
+
+            PdfPCell productCategoryTitle = new PdfPCell(new Paragraph("Kategoria:", boldFont));
+            productCategoryTitle.setPaddingLeft(10);
+            productCategoryTitle.setColspan(2);
+            productCategoryTitle.setPaddingRight(10);
+            productCategoryTitle.setBorder(Rectangle.NO_BORDER);
+
+            PdfPCell productCategoryName = new PdfPCell(new Paragraph(product.getCategory().getName(), normalFont));
+            productCategoryName.setColspan(2);
+            productCategoryName.setPaddingLeft(10);
+            productCategoryName.setPaddingRight(10);
+            productCategoryName.setBorder(Rectangle.NO_BORDER);
+
+            productNameTable.addCell(productNameTitle);
+            productNameTable.addCell(productName);
+            productNameTable.addCell(productWeightTitle);
+            productNameTable.addCell(productWeightName);
+            productNameTable.addCell(productCategoryTitle);
+            productNameTable.addCell(productCategoryName);
+
+
+            PdfPCell productCode = new PdfPCell();
+            Image productImage = Image.getInstance(getQRBytes(codeRepository.findById(product.getCode().getId()).get(), 50, 50));
+            productImage.setWidthPercentage(20);
+            productCode.setImage(productImage);
+
+            productsTable.addCell(productNameTable);
+            productsTable.addCell(productCode);
+            if(i%2 != 0 && i == pack.getContent().getProducts().size())
+                productsTable.completeRow();
+        }
+
+        return productsTable;
+    }
+
 }

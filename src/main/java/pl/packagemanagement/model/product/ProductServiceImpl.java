@@ -41,7 +41,8 @@ public class ProductServiceImpl implements ProductService{
         for (Product product: products) {
             Category tempCategory = categoryRepository.findCategoryById(product.getCategory().getId());
             product.setCategory(tempCategory);
-            product.setCode(codeRepository.save(product.getCode()));
+            Code code = codeRepository.save(product.getCode());
+            product.setCode(code);
         }
 
         return productRepository.saveAll(products);
