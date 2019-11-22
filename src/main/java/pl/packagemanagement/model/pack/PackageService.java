@@ -15,4 +15,5 @@ public interface PackageService {
     void delete(Package pack);
     Package save(Package pack, User user);
     Package update(Package pack);
+    Page<Package> findForAdmin(int pageNumber, int pageSize, String orderBy, String direction);
 }

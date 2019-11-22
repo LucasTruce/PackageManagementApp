@@ -55,6 +55,15 @@ public class PackageController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/admin")
+    public ResponseEntity<Page<Package>> findPackagesForAdmin(@RequestParam(defaultValue = "0") int pageNumber,
+                                                              @RequestParam(defaultValue = "10") int pageSize,
+                                                              @RequestParam(defaultValue = "id") String orderBy,
+                                                              @RequestParam(defaultValue = "ASC") String direction) {
+
+        return new ResponseEntity<>(packageService.findForAdmin(pageNumber, pageSize, orderBy, direction), HttpStatus.OK);
+    }
+
     @GetMapping("/") // packages/?login=
     public ResponseEntity<Page<Package>> findPackagesForUser(@RequestParam(name = "login") String login,
                                                              @RequestParam(defaultValue = "0") int pageNumber,

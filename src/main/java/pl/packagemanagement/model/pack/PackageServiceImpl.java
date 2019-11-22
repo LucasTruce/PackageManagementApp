@@ -70,6 +70,16 @@ public class PackageServiceImpl implements PackageService {
         return pagedPackage;
     }
 
+    public Page<Package> findForAdmin(int pageNumber, int pageSize, String orderBy, String direction) {
+        Page<Package> pagedPackage;
+        if(direction.equals(Sort.Direction.ASC.name()))
+            pagedPackage = packageRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, orderBy)));
+        else
+            pagedPackage = packageRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, orderBy)));
+
+        return pagedPackage;
+    }
+
     @Override
     public void delete(Package pack) {
         packageRepository.delete(pack);
