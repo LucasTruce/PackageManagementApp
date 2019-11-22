@@ -39,7 +39,7 @@ public class UserDetails {
 
     @Column(name = "telefon", length = 13)
     @NotBlank(message = "Numer telefonu nie może być pusty!")
-    @Pattern(regexp = "(\\d]{9})|(\\+[\\d]{11})", message = "Podaj numer 9 cyfrowy lub z formatem +48") //+48123456789 oraz 123456789
+    @Pattern(regexp = "([\\d]{9})|(\\+[\\d]{11})", message = "Podaj numer 9 cyfrowy lub z formatem +48") //+48123456789 oraz 123456789
     private String phoneNumber;
 
     @Column(name = "ulica", length = 72)
@@ -56,6 +56,14 @@ public class UserDetails {
     @Size(min = 6, message = "Podaj poprawny format kodu! (xx-zz)")
     @Pattern(regexp = "([\\d]{2})-([\\d]{3})", message = "Podaj poprawny format kodu! (xx-zz)")
     private String postCode;
+
+    @Column(name = "numer_domu", length = 5)
+    @NotBlank
+    private String houseNumber;
+
+    @Column(name = "numer_mieszkania", length = 5)
+    @NotBlank
+    private String apartmentNumber;
 
     //kto inny jest wlascicielem relacji
     //Uzytkownik

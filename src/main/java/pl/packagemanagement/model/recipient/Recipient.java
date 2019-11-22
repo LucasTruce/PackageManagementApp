@@ -63,6 +63,14 @@ public class Recipient {
     @Email
     private String email;
 
+    @Column(name = "numer_domu", length = 5)
+    @NotBlank
+    private String houseNumber;
+
+    @Column(name = "numer_mieszkania", length = 5)
+    @NotBlank
+    private String apartmentNumber;
+
     @OneToMany(mappedBy = "recipient")
     private List<Package> packages = new ArrayList<>();
 

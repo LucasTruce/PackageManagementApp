@@ -298,7 +298,7 @@ public class PackageServiceImpl implements PackageService {
         senderAddressHeader.setPaddingLeft(10);
         senderAddressHeader.setBorder(Rectangle.NO_BORDER);
 
-        PdfPCell senderAddress= new PdfPCell(new Paragraph(pack.getSender().getPostCode() + ", " + pack.getSender().getCity() + "\nul. " + pack.getSender().getStreet()));
+        PdfPCell senderAddress= new PdfPCell(new Paragraph(pack.getSender().getPostCode() + ", " + pack.getSender().getCity() + "\nul. " + pack.getSender().getStreet() + " " + pack.getSender().getHouseNumber() + "/" + pack.getSender().getApartmentNumber()));
         senderAddress.setPaddingRight(10);
         senderAddress.setBorder(Rectangle.NO_BORDER);
 
@@ -331,7 +331,7 @@ public class PackageServiceImpl implements PackageService {
         receiverAddressHeader.setPaddingLeft(10);
         receiverAddressHeader.setBorder(Rectangle.NO_BORDER);
 
-        PdfPCell receiverAddress= new PdfPCell(new Paragraph(pack.getRecipient().getPostCode() + ", " + pack.getRecipient().getCity() + "\nul. " + pack.getRecipient().getStreet()));
+        PdfPCell receiverAddress= new PdfPCell(new Paragraph(pack.getRecipient().getPostCode() + ", " + pack.getRecipient().getCity() + "\nul. " + pack.getRecipient().getStreet() + " " + pack.getRecipient().getHouseNumber() + "/" + pack.getRecipient().getApartmentNumber()));
         receiverAddress.setPaddingRight(10);
         receiverAddress.setBorder(Rectangle.NO_BORDER);
 
