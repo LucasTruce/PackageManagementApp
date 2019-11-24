@@ -49,6 +49,10 @@ public class Package {
     @Min(1) @Max(1000)
     private int width;
 
+    @Column(name = "waga")
+    @Min(1) @Max(1000)
+    private float weight;
+
     @Column(name = "uwagi", length = 255)
     @NotBlank
     private String comments;

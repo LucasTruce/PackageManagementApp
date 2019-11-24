@@ -9,6 +9,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,12 +154,12 @@ public class PackageServiceImpl implements PackageService {
         }
     }
 
-    private static byte[] getQRBytes(Code code, int width, int height) throws Exception{
+    private static Image getQRImage(Code code, int width, int height) throws Exception{
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(code.toString(), BarcodeFormat.QR_CODE,  width, height);
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "png", pngOutputStream);
-        return pngOutputStream.toByteArray();
+        return Image.getInstance(pngOutputStream.toByteArray());
     }
 
     private void createDocument(Package pack, String filePath, String finalPath) throws Exception {
@@ -175,7 +176,6 @@ public class PackageServiceImpl implements PackageService {
         PdfWriter writer = PdfWriter.getInstance(document, newFile);
         document.open(); //otwarcie dokumentu
 
-
         //tabela trzymajaca tabele z danymi paczki i kod QR
         PdfPTable allTable = new PdfPTable(2);
         allTable.setWidthPercentage(100);
@@ -184,7 +184,6 @@ public class PackageServiceImpl implements PackageService {
 
         createPackageTable(allTable, pack, boldFont, boldFont16, normalFont); //tworzenie tabeli z informacja o paczce, nadawcy odbiorcy
         document.add(allTable);
-
 
         if(pack.getContent() != null) {
             CustomDashedLineSeparator separator = new CustomDashedLineSeparator();
@@ -200,6 +199,11 @@ public class PackageServiceImpl implements PackageService {
             document.add(productsTable);
         }
 
+
+        document.newPage();
+        document.add(transmissionProtocol(pack, boldFont, normalFont, boldFont16));
+        document.newPage();
+        document.add(transmissionProtocol(pack, boldFont, normalFont, boldFont16));
 
         document.close(); //zamkniecie dokumentu
         writer.close();
@@ -222,19 +226,8 @@ public class PackageServiceImpl implements PackageService {
         //codeTable.setSpacingAfter(10f);
         codeTable.setHorizontalAlignment(Element.ALIGN_CENTER);
 
-        PdfPTable senderTable = new PdfPTable(2);
-        senderTable.setWidthPercentage(40);
-        senderTable.setSpacingBefore(10f);
-        senderTable.setSpacingAfter(10f);
-        senderTable.setHorizontalAlignment(Element.ALIGN_LEFT);
-        senderTable.setWidths(columnWidths);
-
-        PdfPTable recipientTable = new PdfPTable(2);
-        recipientTable.setWidthPercentage(40);
-        recipientTable.setSpacingBefore(10f);
-        recipientTable.setSpacingAfter(10f);
-        recipientTable.setHorizontalAlignment(Element.ALIGN_LEFT);
-        recipientTable.setWidths(columnWidths);
+        PdfPTable senderTable = createSenderTable(pack, normalFont, boldFont, boldFont16, columnWidths);
+        PdfPTable recipientTable = createRecipientTable(pack, normalFont, boldFont, boldFont16, columnWidths);
 
         //konfiguracja tabeli paczki
         PdfPCell titleHeader = new PdfPCell(new Paragraph("Dane paczki", boldFont16));
@@ -276,82 +269,12 @@ public class PackageServiceImpl implements PackageService {
         PdfPCell codeTitle = new PdfPCell(new Paragraph("Kod QR paczki", boldFont16));
         codeTitle.setHorizontalAlignment(Element.ALIGN_CENTER);
         codeTitle.setBorder(Rectangle.NO_BORDER);
-        //codeTitle.setPaddingBottom(25);
-
-
-        //konfiguracja tabeli nadawcy
-        PdfPCell titleSenderHeader = new PdfPCell(new Paragraph("Dane nadawcy", boldFont16));
-        titleSenderHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
-        titleSenderHeader.setBorder(Rectangle.NO_BORDER);
-        titleSenderHeader.setPaddingBottom(25);
-        titleSenderHeader.setColspan(2);
-
-        PdfPCell senderNameHeader = new PdfPCell(new Paragraph("Imię i nazwisko:", boldFont));
-        senderNameHeader.setBorder(Rectangle.NO_BORDER);
-        senderNameHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-        senderNameHeader.setPaddingLeft(10);
-        senderNameHeader.setPaddingBottom(10);
-
-        PdfPCell senderName = new PdfPCell(new Paragraph(pack.getSender().getName() + " " + pack.getSender().getLastName()));
-        senderName.setBorder(Rectangle.NO_BORDER);
-
-        PdfPCell senderPhoneNumberHeader = new PdfPCell(new Paragraph("Numer telefonu:", boldFont));
-        senderPhoneNumberHeader.setBorder(Rectangle.NO_BORDER);
-        senderPhoneNumberHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-        senderPhoneNumberHeader.setPaddingLeft(10);
-        senderPhoneNumberHeader.setPaddingBottom(10);
-
-        PdfPCell senderPhoneNumber = new PdfPCell(new Paragraph(pack.getSender().getPhoneNumber()));
-        senderPhoneNumber.setBorder(Rectangle.NO_BORDER);
-
-        PdfPCell senderAddressHeader = new PdfPCell(new Paragraph("Adres:", boldFont));
-        senderAddressHeader.setPaddingLeft(10);
-        senderAddressHeader.setBorder(Rectangle.NO_BORDER);
-
-        PdfPCell senderAddress= new PdfPCell(new Paragraph(pack.getSender().getPostCode() + ", " + pack.getSender().getCity() + "\nul. " + pack.getSender().getStreet() + " " + pack.getSender().getHouseNumber() + "/" + pack.getSender().getApartmentNumber()));
-        senderAddress.setPaddingRight(10);
-        senderAddress.setBorder(Rectangle.NO_BORDER);
-
-        //konfiguracja tabeli odbiorcy
-        PdfPCell titleReceiverHeader = new PdfPCell(new Paragraph("Dane odbiorcy", boldFont16));
-        titleReceiverHeader.setColspan(2);
-        titleReceiverHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
-        titleReceiverHeader.setBorder(Rectangle.NO_BORDER);
-        titleReceiverHeader.setPaddingBottom(25);
-
-        PdfPCell receiverNameHeader = new PdfPCell(new Paragraph("Imię i nazwisko:", boldFont));
-        receiverNameHeader.setBorder(Rectangle.NO_BORDER);
-        receiverNameHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-        receiverNameHeader.setPaddingLeft(10);
-        receiverNameHeader.setPaddingBottom(10);
-
-        PdfPCell receiverName = new PdfPCell(new Paragraph(pack.getRecipient().getName() + " " + pack.getRecipient().getLastName()));
-        receiverName.setBorder(Rectangle.NO_BORDER);
-
-        PdfPCell receiverPhoneNumberHeader = new PdfPCell(new Paragraph("Numer telefonu:", boldFont));
-        receiverPhoneNumberHeader.setBorder(Rectangle.NO_BORDER);
-        receiverPhoneNumberHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
-        receiverPhoneNumberHeader.setPaddingLeft(10);
-        receiverPhoneNumberHeader.setPaddingBottom(10);
-
-        PdfPCell receiverPhoneNumber = new PdfPCell(new Paragraph(pack.getRecipient().getPhoneNumber()));
-        receiverPhoneNumber.setBorder(Rectangle.NO_BORDER);
-
-        PdfPCell receiverAddressHeader = new PdfPCell(new Paragraph("Adres:", boldFont));
-        receiverAddressHeader.setPaddingLeft(10);
-        receiverAddressHeader.setBorder(Rectangle.NO_BORDER);
-
-        PdfPCell receiverAddress= new PdfPCell(new Paragraph(pack.getRecipient().getPostCode() + ", " + pack.getRecipient().getCity() + "\nul. " + pack.getRecipient().getStreet() + " " + pack.getRecipient().getHouseNumber() + "/" + pack.getRecipient().getApartmentNumber()));
-        receiverAddress.setPaddingRight(10);
-        receiverAddress.setBorder(Rectangle.NO_BORDER);
 
         //stworzenie obrazka QR kod
         PdfPCell cell3 = new PdfPCell();
         cell3.setBorder(Rectangle.NO_BORDER);
 
-
-        byte[] pngData = getQRBytes(pack.getCode(), 256, 256);
-        Image image = Image.getInstance(pngData);
+        Image image = getQRImage(pack.getCode(), 256, 256);
         cell3.setImage(image);//przypisanie obrazka do komórki tabeli
 
         //dodanie danych do tabeli z Paczka
@@ -365,24 +288,6 @@ public class PackageServiceImpl implements PackageService {
 
         codeTable.addCell(codeTitle);
         codeTable.addCell(cell3);
-
-        //dodanie danych do tabeli z nadawca
-        senderTable.addCell(titleSenderHeader);
-        senderTable.addCell(senderNameHeader);
-        senderTable.addCell(senderName);
-        senderTable.addCell(senderPhoneNumberHeader);
-        senderTable.addCell(senderPhoneNumber);
-        senderTable.addCell(senderAddressHeader);
-        senderTable.addCell(senderAddress);
-
-        //dodanie danych do tabeli z odbiorca
-        recipientTable.addCell(titleReceiverHeader);
-        recipientTable.addCell(receiverNameHeader);
-        recipientTable.addCell(receiverName);
-        recipientTable.addCell(receiverPhoneNumberHeader);
-        recipientTable.addCell(receiverPhoneNumber);
-        recipientTable.addCell(receiverAddressHeader);
-        recipientTable.addCell(receiverAddress);
 
         //dodanie tabeli oraz kodu QR do wiekszej tabeli
         allTable.addCell(packageTable);
@@ -452,9 +357,8 @@ public class PackageServiceImpl implements PackageService {
             productNameTable.addCell(productCategoryTitle);
             productNameTable.addCell(productCategoryName);
 
-
             PdfPCell productCode = new PdfPCell();
-            Image productImage = Image.getInstance(getQRBytes(codeRepository.findById(product.getCode().getId()).get(), 50, 50));
+            Image productImage = getQRImage(codeRepository.findById(product.getCode().getId()).get(), 50, 50);
             productImage.setWidthPercentage(20);
             productCode.setImage(productImage);
 
@@ -465,6 +369,273 @@ public class PackageServiceImpl implements PackageService {
         }
 
         return productsTable;
+    }
+
+    private PdfPTable transmissionProtocol(Package pack, Font boldFont, Font normalFont, Font boldFont16) throws Exception{
+
+        float[] columnWidths = {2.7f, 0.1f, 2.7f};
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        table.setWidths(columnWidths);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+        PdfPCell titleCell = new PdfPCell(new Paragraph("Protokół przekazania paczki", boldFont16));
+        titleCell.setColspan(3);
+        titleCell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        titleCell.setBorder(Rectangle.NO_BORDER);
+        titleCell.setPaddingBottom(20);
+
+        table.addCell(titleCell);
+
+        float[] senderReceiverWidths = {1.0f, 1.5f};
+        PdfPTable senderTable = createSenderTable(pack, normalFont, boldFont, boldFont16, senderReceiverWidths);
+        PdfPTable recipientTable = createRecipientTable(pack, normalFont, boldFont, boldFont16, senderReceiverWidths);
+
+        table.addCell(senderTable);
+        table.addCell(getCell("", PdfPCell.ALIGN_MIDDLE, normalFont));
+        table.addCell(recipientTable);
+
+        PdfPCell packageTableHeader = new PdfPCell(new Paragraph("Informacje o paczce:", boldFont16));
+        packageTableHeader.setBorder(Rectangle.NO_BORDER);
+        packageTableHeader.setColspan(3);
+        packageTableHeader.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+        packageTableHeader.setPaddingTop(25);
+        packageTableHeader.setPaddingBottom(10);
+
+        PdfPCell packageTable = new PdfPCell(transmissionProtocolPackageTable(pack, normalFont, boldFont, boldFont16));
+        packageTable.setColspan(3);
+        packageTable.setBorder(Rectangle.NO_BORDER);
+
+        table.addCell(packageTableHeader);
+        table.addCell(packageTable);
+
+
+        if(pack.getContent() != null) {
+            PdfPCell packageProductsTableHeader = new PdfPCell(new Paragraph("Informacje o produktach:", boldFont16));
+            packageProductsTableHeader.setBorder(Rectangle.NO_BORDER);
+            packageProductsTableHeader.setColspan(3);
+            packageProductsTableHeader.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+            packageProductsTableHeader.setPaddingTop(15);
+            packageProductsTableHeader.setPaddingBottom(10);
+
+            table.addCell(packageProductsTableHeader);
+            PdfPCell productTable = new PdfPCell(transmissionProtocolPackageProductsTable(pack, normalFont, boldFont, boldFont16));
+            productTable.setColspan(3);
+            productTable.setBorder(Rectangle.NO_BORDER);
+
+            table.addCell(productTable);
+        }
+
+        PdfPCell signatureTable = new PdfPCell(transmissionProtocolSignature(normalFont));
+        signatureTable.setColspan(3);
+        signatureTable.setBorder(Rectangle.NO_BORDER);
+
+        table.addCell(signatureTable);
+
+
+        return table;
+    }
+
+    private PdfPTable transmissionProtocolPackageTable (Package pack, Font normalFont, Font boldFont, Font boldFont16) throws Exception{
+        float[] columnWidths = {0.3f, 1.1f, 1.0f, 1.0f, 1.0f, 0.7f};
+        PdfPTable table = new PdfPTable(6);
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10f);
+        table.setSpacingAfter(10f);
+        table.setWidths(columnWidths);
+
+        table.addCell(getCellWithBorder("Lp.", PdfPCell.ALIGN_CENTER, boldFont));
+        table.addCell(getCellWithBorder("Numer paczki", PdfPCell.ALIGN_CENTER, boldFont));
+        table.addCell(getCellWithBorder("Wysokość [cm]", PdfPCell.ALIGN_CENTER, boldFont));
+        table.addCell(getCellWithBorder("Szerokość [cm]", PdfPCell.ALIGN_CENTER, boldFont));
+        table.addCell(getCellWithBorder("Długość [cm]", PdfPCell.ALIGN_CENTER, boldFont));
+        table.addCell(getCellWithBorder("Waga [kg]", PdfPCell.ALIGN_CENTER, boldFont));
+
+        table.addCell(getCellWithBorder("1", PdfPCell.ALIGN_CENTER, normalFont));
+        table.addCell(getCellWithBorder(pack.getPackageNumber(), PdfPCell.ALIGN_CENTER, normalFont));
+        table.addCell(getCellWithBorder(pack.getHeight() + "", PdfPCell.ALIGN_CENTER, normalFont));
+        table.addCell(getCellWithBorder(pack.getWidth() + "", PdfPCell.ALIGN_CENTER, normalFont));
+        table.addCell(getCellWithBorder(pack.getLength() + "", PdfPCell.ALIGN_CENTER, normalFont));
+        table.addCell(getCellWithBorder(pack.getWeight() + "", PdfPCell.ALIGN_CENTER, normalFont));
+
+        return table;
+    }
+
+    private PdfPTable transmissionProtocolPackageProductsTable (Package pack, Font normalFont, Font boldFont, Font boldFont16) throws Exception{
+        float[] columnWidths = {0.3f, 1.1f, 1.0f, 1.0f};
+        PdfPTable table = new PdfPTable(4);
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10f);
+        table.setSpacingAfter(10f);
+        table.setWidths(columnWidths);
+
+        table.addCell(getCellWithBorder("Lp.", PdfPCell.ALIGN_CENTER, boldFont));
+        table.addCell(getCellWithBorder("Nazwa produktu", PdfPCell.ALIGN_CENTER, boldFont));
+        table.addCell(getCellWithBorder("Kategoria produktu", PdfPCell.ALIGN_CENTER, boldFont));
+        table.addCell(getCellWithBorder("Waga [kg]", PdfPCell.ALIGN_CENTER, boldFont));
+
+        int i = 0;
+        for(Product product : pack.getContent().getProducts()) {
+            i++;
+            table.addCell(getCellWithBorder(i + "", PdfPCell.ALIGN_CENTER, normalFont));
+            table.addCell(getCellWithBorder(product.getName(), PdfPCell.ALIGN_CENTER, normalFont));
+            table.addCell(getCellWithBorder(product.getCategory().getName(), PdfPCell.ALIGN_CENTER, normalFont));
+            table.addCell(getCellWithBorder(product.getWeight() + "", PdfPCell.ALIGN_CENTER, normalFont));
+        }
+        return table;
+    }
+
+    private PdfPTable transmissionProtocolSignature(Font normalFont) throws Exception {
+        float[] columnWidths = {1.5f, 1.2f, 1.5f};
+        PdfPTable table = new PdfPTable(3);
+        table.setSpacingBefore(50);
+        table.setWidthPercentage(100);
+        table.setWidths(columnWidths);
+        table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+
+        PdfPTable courierSignatureTable = new PdfPTable(1);
+        PdfPTable dateSignatureTable = new PdfPTable(1);
+        PdfPTable senderReceiverSignatureTable = new PdfPTable(1);
+
+        Chunk leader = new Chunk(new DottedLineSeparator());
+
+        Paragraph dottedParagraph = new Paragraph();
+        dottedParagraph.add(leader);
+        PdfPCell dottedCell = new PdfPCell(dottedParagraph);
+        dottedCell.setBorder(Rectangle.NO_BORDER);
+
+        courierSignatureTable.addCell(dottedCell);
+        courierSignatureTable.addCell(getCell("Podpis kuriera", PdfPCell.ALIGN_CENTER, normalFont));
+        dateSignatureTable.addCell(dottedCell);
+        dateSignatureTable.addCell(getCell("Data", PdfPCell.ALIGN_CENTER, normalFont));
+        senderReceiverSignatureTable.addCell(dottedCell);
+        senderReceiverSignatureTable.addCell(getCell("Podpis nadawcy/odbiorcy", PdfPCell.ALIGN_CENTER, normalFont));
+
+        table.addCell(courierSignatureTable);
+        table.addCell(dateSignatureTable);
+        table.addCell(senderReceiverSignatureTable);
+
+        return table;
+    }
+
+    private PdfPTable createSenderTable(Package pack, Font normalFont, Font boldFont, Font boldFont16, float[] columnWidths) throws Exception{
+        PdfPTable senderTable = new PdfPTable(2);
+        senderTable.setWidthPercentage(50);
+        senderTable.setSpacingBefore(10f);
+        senderTable.setSpacingAfter(10f);
+        senderTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+        senderTable.setWidths(columnWidths);
+
+        PdfPCell titleSenderHeader = new PdfPCell(new Paragraph("Dane nadawcy", boldFont16));
+        titleSenderHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+        titleSenderHeader.setBorder(Rectangle.NO_BORDER);
+        titleSenderHeader.setPaddingBottom(25);
+        titleSenderHeader.setColspan(2);
+
+        PdfPCell senderNameHeader = new PdfPCell(new Paragraph("Imię i nazwisko:", boldFont));
+        senderNameHeader.setBorder(Rectangle.NO_BORDER);
+        senderNameHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
+        senderNameHeader.setPaddingLeft(10);
+        senderNameHeader.setPaddingBottom(10);
+
+        PdfPCell senderName = new PdfPCell(new Paragraph(pack.getSender().getName() + " " + pack.getSender().getLastName()));
+        senderName.setBorder(Rectangle.NO_BORDER);
+
+        PdfPCell senderPhoneNumberHeader = new PdfPCell(new Paragraph("Numer telefonu:", boldFont));
+        senderPhoneNumberHeader.setBorder(Rectangle.NO_BORDER);
+        senderPhoneNumberHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
+        senderPhoneNumberHeader.setPaddingBottom(10);
+        senderPhoneNumberHeader.setPaddingLeft(10);
+
+        PdfPCell senderPhoneNumber = new PdfPCell(new Paragraph(pack.getSender().getPhoneNumber()));
+        senderPhoneNumber.setBorder(Rectangle.NO_BORDER);
+
+        PdfPCell senderAddressHeader = new PdfPCell(new Paragraph("Adres:", boldFont));
+        senderAddressHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
+        senderAddressHeader.setBorder(Rectangle.NO_BORDER);
+        senderAddressHeader.setPaddingLeft(10);
+
+        PdfPCell senderAddress= new PdfPCell(new Paragraph(pack.getSender().getPostCode() + ", " + pack.getSender().getCity() + "\nul. " + pack.getSender().getStreet() + " " + pack.getSender().getHouseNumber() + "/" + pack.getSender().getApartmentNumber()));
+        senderAddress.setBorder(Rectangle.NO_BORDER);
+
+        senderTable.addCell(titleSenderHeader);
+        senderTable.addCell(senderNameHeader);
+        senderTable.addCell(senderName);
+        senderTable.addCell(senderPhoneNumberHeader);
+        senderTable.addCell(senderPhoneNumber);
+        senderTable.addCell(senderAddressHeader);
+        senderTable.addCell(senderAddress);
+
+        return senderTable;
+    }
+
+    private PdfPTable createRecipientTable(Package pack, Font normalFont, Font boldFont, Font boldFont16, float[] columnWidths) throws Exception {
+
+        PdfPTable recipientTable = new PdfPTable(2);
+        recipientTable.setWidthPercentage(40);
+        recipientTable.setSpacingBefore(10f);
+        recipientTable.setSpacingAfter(10f);
+        recipientTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+        recipientTable.setWidths(columnWidths);
+
+        PdfPCell titleReceiverHeader = new PdfPCell(new Paragraph("Dane odbiorcy", boldFont16));
+        titleReceiverHeader.setColspan(2);
+        titleReceiverHeader.setHorizontalAlignment(Element.ALIGN_CENTER);
+        titleReceiverHeader.setBorder(Rectangle.NO_BORDER);
+        titleReceiverHeader.setPaddingBottom(25);
+
+        PdfPCell receiverNameHeader = new PdfPCell(new Paragraph("Imię i nazwisko:", boldFont));
+        receiverNameHeader.setBorder(Rectangle.NO_BORDER);
+        receiverNameHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
+        receiverNameHeader.setPaddingLeft(10);
+        receiverNameHeader.setPaddingBottom(10);
+
+        PdfPCell receiverName = new PdfPCell(new Paragraph(pack.getRecipient().getName() + " " + pack.getRecipient().getLastName()));
+        receiverName.setBorder(Rectangle.NO_BORDER);
+
+        PdfPCell receiverPhoneNumberHeader = new PdfPCell(new Paragraph("Numer telefonu:", boldFont));
+        receiverPhoneNumberHeader.setBorder(Rectangle.NO_BORDER);
+        receiverPhoneNumberHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
+        receiverPhoneNumberHeader.setPaddingLeft(10);
+        receiverPhoneNumberHeader.setPaddingBottom(10);
+
+        PdfPCell receiverPhoneNumber = new PdfPCell(new Paragraph(pack.getRecipient().getPhoneNumber()));
+        receiverPhoneNumber.setBorder(Rectangle.NO_BORDER);
+
+        PdfPCell receiverAddressHeader = new PdfPCell(new Paragraph("Adres:", boldFont));
+        receiverAddressHeader.setPaddingLeft(10);
+        receiverAddressHeader.setBorder(Rectangle.NO_BORDER);
+
+        PdfPCell receiverAddress= new PdfPCell(new Paragraph(pack.getRecipient().getPostCode() + ", " + pack.getRecipient().getCity() + "\nul. " + pack.getRecipient().getStreet() + " " + pack.getRecipient().getHouseNumber() + "/" + pack.getRecipient().getApartmentNumber()));
+        receiverAddress.setPaddingRight(10);
+        receiverAddress.setBorder(Rectangle.NO_BORDER);
+
+        recipientTable.addCell(titleReceiverHeader);
+        recipientTable.addCell(receiverNameHeader);
+        recipientTable.addCell(receiverName);
+        recipientTable.addCell(receiverPhoneNumberHeader);
+        recipientTable.addCell(receiverPhoneNumber);
+        recipientTable.addCell(receiverAddressHeader);
+        recipientTable.addCell(receiverAddress);
+
+        return recipientTable;
+    }
+
+    private PdfPCell getCell(String text, int alignment, Font font) {
+        PdfPCell cell = new PdfPCell(new Paragraph(text, font));
+        cell.setPadding(0);
+        cell.setHorizontalAlignment(alignment);
+        cell.setBorder(Rectangle.NO_BORDER);
+        return cell;
+    }
+
+
+    private PdfPCell getCellWithBorder(String text, int alignment, Font font) {
+        PdfPCell cell = new PdfPCell(new Paragraph(text, font));
+        cell.setHorizontalAlignment(alignment);
+        cell.setPaddingTop(5);
+        cell.setPaddingBottom(5);
+        return cell;
     }
 
 }
