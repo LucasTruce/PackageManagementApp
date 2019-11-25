@@ -56,7 +56,7 @@ public class Code {
         else if(warehouse != null)
             variable = ",\"warehouseId\":" + warehouse.getId();
         else if(product != null)
-            variable = ",\"productId\":" + product.getId() + ",\"packNumber\":" + product.getContent().getPack().getPackageNumber(); //mozna dodac date kompletacji towarow (getContent.getDate()
+            variable = ",\"productId\":" + product.getId() + ",\"packNumber\":" + product.getContent().getPack().getPackageNumber() + ",\"completationDate\":\"" + product.getContent().getDate() + "\""; //mozna dodac date kompletacji towarow (getContent.getDate()
 
         return "{\"codeId\":" + id + variable + "}";
     }

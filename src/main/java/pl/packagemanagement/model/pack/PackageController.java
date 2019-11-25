@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import pl.packagemanagement.model.history.HistoryService;
 import pl.packagemanagement.exception.EntityNotFoundException;
 import pl.packagemanagement.model.user.User;
 import pl.packagemanagement.model.user.UserService;
@@ -22,7 +21,6 @@ import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -33,7 +31,6 @@ public class PackageController {
 
     private final PackageService packageService;
     private final UserService userService;
-    private final HistoryService historyService;
 
     @GetMapping
     public ResponseEntity<List<Package>> findAllPackages() {
@@ -62,6 +59,13 @@ public class PackageController {
                                                               @RequestParam(defaultValue = "ASC") String direction) {
 
         return new ResponseEntity<>(packageService.findForAdmin(pageNumber, pageSize, orderBy, direction), HttpStatus.OK);
+    }
+
+    @GetMapping("/forDelivery")
+    public ResponseEntity<Page<Package>> findPackageForDelivery(@RequestParam(defaultValue = "0") int pageNumber,
+                                                                @RequestParam(defaultValue = "10") int pageSize) {
+
+        return new ResponseEntity<>(packageService.findForDelivery(pageNumber, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("/") // packages/?login=

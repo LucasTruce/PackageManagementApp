@@ -81,6 +81,11 @@ public class PackageServiceImpl implements PackageService {
         return pagedPackage;
     }
 
+    public Page<Package> findForDelivery(int pageNumber, int pageSize) {
+
+        return packageRepository.findAllByPackageStatusIdOrderBySenderCity(3L, PageRequest.of(pageNumber, pageSize));
+    }
+
     @Override
     public void delete(Package pack) {
         packageRepository.delete(pack);

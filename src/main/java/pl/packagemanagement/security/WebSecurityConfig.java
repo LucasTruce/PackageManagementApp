@@ -57,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll() //dostep nieautoryzowany podczas rejestracji
                 .antMatchers("/userdetails").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users", "/packages/admin").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/packages/forDelivery").hasAnyRole("ADMIN", "WORKER")
                 .antMatchers("/users/{userId}").hasRole("ADMIN")  //get /users/x with parameters
                 .antMatchers(HttpMethod.DELETE, "/users").hasAnyRole("ADMIN", "USER", "WORKER")
                 .antMatchers(HttpMethod.GET, "/warehouses").hasRole("ADMIN")

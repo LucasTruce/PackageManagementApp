@@ -16,4 +16,5 @@ public interface PackageService {
     Package save(Package pack, User user);
     Package update(Package pack);
     Page<Package> findForAdmin(int pageNumber, int pageSize, String orderBy, String direction);
+    Page<Package> findForDelivery(int pageNumber, int pageSize);
 }

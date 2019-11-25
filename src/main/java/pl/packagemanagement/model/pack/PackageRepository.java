@@ -15,4 +15,6 @@ import java.util.Optional;
 public interface PackageRepository extends JpaRepository<Package, Long> {
     Optional<Package> findByPackageNumber(String number);
     Page<Package> findAllByUsers(List<User> users, Pageable pageable);
+    Page<Package> findAllByPackageStatusIdOrderBySenderCity(Long id, Pageable pageable);
+
 }
